@@ -10,14 +10,16 @@ public class CommentResponseDto {
 	private Long id;
 	private String username;
 	private LocalDateTime createdAt;
-	private String comment;
+	private LocalDateTime modifiedAt;
+	private String contents;
 	private int likes;
 
 	public CommentResponseDto(Comment comment) {
 		this.id = comment.getId();
 		this.username = comment.getUser().getUsername();
 		this.createdAt = comment.getCreatedAt();
-		this.comment = comment.getComment();
+		this.modifiedAt = comment.getModifiedAt();
+		this.contents = comment.getContents();
 		this.likes = comment.getLikes();
 	}
 }

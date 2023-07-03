@@ -16,25 +16,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 public class CommentController {
 	private final CommentService commentService;
 	private final GlobalExceptionHandler globalExceptionHandler;
 
 	// 선택한 게시글에 대한 모든 댓글 조회
-	@GetMapping("/{postId}/comment")
+	@GetMapping("/{postId}/comments")
 	public List<CommentResponseDto> getCommentsByPostId(@PathVariable Long postId) {
 		return commentService.getCommentsByPostId(postId);
 	}
 
 	// 댓글 작성
-	@PostMapping("/{postId}/comment")
+	@PostMapping("/{postId}/comments")
 	public CommentResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		return commentService.createComment(postId, requestDto, userDetails.getUser());
 	}
 
 	// 선택한 댓글 수정
-	@PutMapping("/{postId}/comment/{commentId}")
+	@PutMapping("/{postId}/comments/{commentId}")
 	public Object updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
 		CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails.getUser(), response);
 
@@ -53,7 +53,7 @@ public class CommentController {
 	}
 
 	// 선택한 댓글 삭제
-	@DeleteMapping("/{postId}/comment/{commentId}")
+	@DeleteMapping("/{postId}/comments/{commentId}")
 	public Object deleteComment(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
 		commentService.deleteComment(postId, commentId, userDetails.getUser(), response);
 
@@ -72,7 +72,7 @@ public class CommentController {
 	}
 
 	// 선택한 댓글 좋아요
-	@PutMapping("/{postId}/comment/{commentId}/likes")
+	@PutMapping("/{postId}/comments/{commentId}/likes")
 	public Object commentLike(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
 		CommentResponseDto responseDto = commentService.commentLike(postId, commentId, userDetails.getUser(), response);
 

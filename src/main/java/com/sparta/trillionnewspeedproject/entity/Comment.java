@@ -14,18 +14,18 @@ import lombok.Setter;
 public class Comment extends Timestamped {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "post_id", nullable = false)
+	@JoinColumn(name = "post_postId", nullable = false)
 	private Post post;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "comment", nullable = false, length = 100)
-	private String comment;
+	@Column(name = "contents", nullable = false, length = 100)
+	private String contents;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_username", nullable = false)
+	@JoinColumn(name = "user_userId", nullable = false)
 	private User user;
 
 	@Column(name = "likes")
@@ -33,12 +33,12 @@ public class Comment extends Timestamped {
 
 	public Comment(Post post, CommentRequestDto requestDto, User user) {
 		this.post = post;
-		this.comment = requestDto.getComment();
+		this.contents = requestDto.getContents();
 		this.user = user;
 	}
 
 	public void update(CommentRequestDto requestDto) {
-		this.comment = requestDto.getComment();
+		this.contents = requestDto.getContents();
 	}
 
 	public void updateLikes() {
