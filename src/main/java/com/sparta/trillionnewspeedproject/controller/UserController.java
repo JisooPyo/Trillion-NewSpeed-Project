@@ -12,10 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/user/signup")
-    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+    public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
@@ -47,10 +44,8 @@ public class UserController {
             }
             return "redirect:/api/user/signup";
         }
-
         userService.signup(requestDto);
-
-        return "redirect:/api/user/login-page";
+        return "redirect:/api/user/login";
     }
 
     // 회원 관련 정보 받기(프로필 조회)

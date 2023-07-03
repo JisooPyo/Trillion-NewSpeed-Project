@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+        log.info("로그인 성공 및 JWT 생성");
         String userId = ((UserDetailsImpl) authResult.getPrincipal()).getUserId();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
@@ -54,6 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        log.info("로그인 실패");
         response.setStatus(401);
     }
 

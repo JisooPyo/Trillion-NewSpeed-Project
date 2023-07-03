@@ -21,25 +21,24 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void signup(SignupRequestDto requestDto) {
-        String userId= requestDto.getUserId();
+        String userId = requestDto.getUserId();
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
-
+        String introduce = requestDto.getIntroduce();
+        String email = requestDto.getEmail();
         // 아이디 중복 확인
         Optional<User> checkUserId = userRepository.findByUserId(userId);
-        if (checkUserId.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-        }
-
-
-
         // email 중복확인
-        String email = requestDto.getEmail();
         Optional<User> checkEmail = userRepository.findByEmail(email);
-        if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 Email 입니다.");
+
+        if (checkUserId.isPresent()) {
+            throw new IllegalArgumentException("중복된 ID입니다.");
         }
-        String introduce = requestDto.getIntroduce();
+
+        if (checkEmail.isPresent()) {
+            throw new IllegalArgumentException("중복된 Email입니다.");
+        }
+
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
@@ -50,7 +49,9 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(userId,username, password, email,introduce, role);
+        User user = new User(userId, username, password, email, introduce, role);
         userRepository.save(user);
+        System.out.println("회원가입 완료");
+        System.out.println(user);
     }
 }
