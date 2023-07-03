@@ -19,13 +19,13 @@ public class Comment extends Timestamped {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long commentId;
 
 	@Column(name = "contents", nullable = false, length = 100)
-	private String contents;
+	private String commentContents;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_userId", nullable = false)
+	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
 	@Column(name = "likes")
@@ -33,12 +33,12 @@ public class Comment extends Timestamped {
 
 	public Comment(Post post, CommentRequestDto requestDto, User user) {
 		this.post = post;
-		this.contents = requestDto.getContents();
+		this.commentContents = requestDto.getCommentContents();
 		this.user = user;
 	}
 
 	public void update(CommentRequestDto requestDto) {
-		this.contents = requestDto.getContents();
+		this.commentContents = requestDto.getCommentContents();
 	}
 
 	public void updateLikes() {
