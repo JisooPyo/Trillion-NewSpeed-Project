@@ -39,12 +39,18 @@ public class CommentService {
 	// 선택한 댓글 수정
 	@Transactional
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user, HttpServletResponse response) {
+
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
 		if (postId != findComment(commentId).getPost().getId()) {
 			response.setStatus(404);
 			return null;
+
+		// 다른 유저가 수정을 시도할 경우 오류 코드 반환
 		} else if (!checkUser(commentId, user)) {
 			response.setStatus(400);
 			return null;
+
+		// 오류가 나지 않을 경우 해당 댓글 수정
 		} else {
 			findComment(commentId).update(requestDto);
 			CommentResponseDto commentResponseDto = new CommentResponseDto(findComment(commentId));
@@ -54,10 +60,16 @@ public class CommentService {
 
 	// 선택한 댓글 삭제
 	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user, HttpServletResponse response) {
+
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
 		if (postId != findComment(commentId).getPost().getId()) {
 			response.setStatus(404);
+
+		// 다른 유저가 삭제를 시도할 경우 오류 코드 반환
 		} else if (!checkUser(commentId, user)) {
 			response.setStatus(400);
+
+		// 오류가 나지 않을 경우 해당 댓글 삭제
 		} else {
 			commentRepository.delete(findComment(commentId));
 		}
@@ -65,12 +77,18 @@ public class CommentService {
 
 	// 선택한 댓글 좋아요 기능 추가
 	public CommentResponseDto commentLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
 		if (postId != findComment(commentId).getPost().getId()) {
 			response.setStatus(404);
 			return null;
+
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
 		} else if (checkUser(commentId, user)) {
 			response.setStatus(400);
 			return null;
+
+		// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
 		} else {
 			Comment comment = findComment(commentId);
 			comment.updateLikes();
