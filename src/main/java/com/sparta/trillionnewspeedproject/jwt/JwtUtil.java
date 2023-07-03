@@ -50,7 +50,8 @@ public class JwtUtil {
                         .compact();
     }
 
-    // header 에서 JWT 가져오기
+    // 기존방식 : request에서 쿠키 가져오고, 쿠키 value 내 JWT 를 가져옴
+    // 변경방식 : header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {

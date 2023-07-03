@@ -1,8 +1,8 @@
 package com.sparta.trillionnewspeedproject.config;
 
 
-import com.sparta.trillionnewspeedproject.filter.JwtAuthenticationFilter;
-import com.sparta.trillionnewspeedproject.filter.JwtAuthorizationFilter;
+import com.sparta.trillionnewspeedproject.security.JwtAuthenticationFilter;
+import com.sparta.trillionnewspeedproject.security.JwtAuthorizationFilter;
 import com.sparta.trillionnewspeedproject.jwt.JwtUtil;
 import com.sparta.trillionnewspeedproject.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +66,13 @@ public class WebSecurityConfig {
                         .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
                         .requestMatchers("/api/user/signup").permitAll() // '/api/user/signup' 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login").permitAll() // '/api/user/login' 요청은 모든 사용자에게 허용
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+                       .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         http.formLogin((formLogin) ->
-                formLogin
-                        .loginPage("/api/user/login-page").permitAll()
+                formLogin.disable()
+//                        .loginPage("/api/user/login-page").permitAll()
+
         );
 
         // 필터 관리

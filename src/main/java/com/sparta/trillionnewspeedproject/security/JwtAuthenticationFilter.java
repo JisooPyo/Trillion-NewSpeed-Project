@@ -1,10 +1,9 @@
-package com.sparta.trillionnewspeedproject.filter;
+package com.sparta.trillionnewspeedproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.trillionnewspeedproject.dto.LoginRequestDto;
 import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
 import com.sparta.trillionnewspeedproject.jwt.JwtUtil;
-import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,5 +1,7 @@
 package com.sparta.trillionnewspeedproject.entity;
 
+import com.sparta.trillionnewspeedproject.dto.UserPasswordRequestDto;
+import com.sparta.trillionnewspeedproject.dto.UserProfileRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +41,13 @@ public class User {
         this.email = email;
         this.introduce = introduce;
         this.role = role;
+    }
+
+    public void modifyProfile(UserProfileRequestDto requestDto) {
+        this.username = requestDto.getUsername();
+        this.introduce = requestDto.getIntroduce();
+    }
+    public void modifyPassword(String modifyPassword){
+        this.password = modifyPassword;
     }
 }

@@ -1,8 +1,6 @@
 package com.sparta.trillionnewspeedproject.controller;
 
-import com.sparta.trillionnewspeedproject.dto.SignupRequestDto;
-import com.sparta.trillionnewspeedproject.dto.UserProfileDto;
-import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
+import com.sparta.trillionnewspeedproject.dto.*;
 import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
 import com.sparta.trillionnewspeedproject.service.UserService;
 import jakarta.validation.Valid;
@@ -35,6 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/user/signup")
+    @ResponseBody
     public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -51,13 +50,34 @@ public class UserController {
     // 회원 관련 정보 받기(프로필 조회)
     @GetMapping("/user/profile")
     @ResponseBody
-    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String userId = userDetails.getUser().getUserId();
-        String username = userDetails.getUser().getUsername();
-        String introduce = userDetails.getUser().getIntroduce();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
+    public UserProfileResponseDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getUserProfile(userDetails.getUser());
 
-        return new UserProfileDto(username, isAdmin);
     }
+
+    // 회원 관련 정보 변경(프로필 변경)
+    @PutMapping("/user/profile")
+    @ResponseBody
+    public UserProfileResponseDto modifyUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UserProfileRequestDto requestDto) {
+        return new UserProfileResponseDto(userService.modifyUserProfile(userDetails.getUser(),requestDto));
+    }
+
+    // 비밀번호 변경
+    @PutMapping("/user/profile/pw")
+    @ResponseBody
+    public void modifyUserPassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UserPasswordRequestDto requestDto) {
+        userService.modifyUserPassword(userDetails.getUser(),requestDto);
+    }
+
+//    @PostMapping("/user/findid")
+//    @ResponseBody
+//    public FindIDResponseDto findID(@RequestBody FindIDRequestDto requestDto){
+//        return userService.findID(requestDto);
+//    }
+//
+//    @PostMapping("/user/findpw")
+//    @ResponseBody
+//    public FindPWResponseDto findPW(@RequestBody FindIDRequestDto requestDto){
+//        return userService.findPW(requestDto);
+//    }
 }
