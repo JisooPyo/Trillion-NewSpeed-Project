@@ -16,27 +16,27 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/posts")
+@RequestMapping("/api/post")
 public class CommentController {
 	private final CommentService commentService;
 	private final GlobalExceptionHandler globalExceptionHandler;
 
 	// 선택한 게시글에 대한 모든 댓글 조회
-	@GetMapping("/{postid}/comments")
-	public List<CommentResponseDto> getCommentsByPostId(@PathVariable Long postid) {
-		return commentService.getCommentsByPostId(postid);
+	@GetMapping("/{postId}/comment")
+	public List<CommentResponseDto> getCommentsByPostId(@PathVariable Long postId) {
+		return commentService.getCommentsByPostId(postId);
 	}
 
 	// 댓글 작성
-	@PostMapping("/{postid}/comments")
-	public CommentResponseDto createComment(@PathVariable Long postid, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return commentService.createComment(postid, requestDto, userDetails.getUser());
+	@PostMapping("/{postId}/comment")
+	public CommentResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+		return commentService.createComment(postId, requestDto, userDetails.getUser());
 	}
 
 	// 선택한 댓글 수정
-	@PutMapping("/{postid}/comments/{commentid}")
-	public Object updateComment(@PathVariable Long postid, @PathVariable Long commentid, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
-		CommentResponseDto responseDto = commentService.updateComment(postid, commentid, requestDto, userDetails.getUser(), response);
+	@PutMapping("/{postId}/comment/{commentId}")
+	public Object updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
+		CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails.getUser(), response);
 
 		if (response.getStatus() == 400) {
 			return globalExceptionHandler.badRequestException(ErrorCode.USER_ONLY_ERROR);
@@ -48,9 +48,9 @@ public class CommentController {
 	}
 
 	// 선택한 댓글 삭제
-	@DeleteMapping("/{postid}/comments/{commentid}")
-	public Object deleteComment(@PathVariable Long postid, @PathVariable Long commentid, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
-		commentService.deleteComment(postid, commentid, userDetails.getUser(), response);
+	@DeleteMapping("/{postId}/comment/{commentId}")
+	public Object deleteComment(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
+		commentService.deleteComment(postId, commentId, userDetails.getUser(), response);
 
 		if (response.getStatus() == 400) {
 			return globalExceptionHandler.badRequestException(ErrorCode.USER_ONLY_ERROR);
@@ -62,9 +62,9 @@ public class CommentController {
 	}
 
 	// 선택한 댓글 좋아요
-	@PutMapping("/{postid}/comments/{commentid}/likes")
-	public Object commentLike(@PathVariable Long postid, @PathVariable Long commentid, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
-		CommentResponseDto responseDto = commentService.commentLike(postid, commentid, userDetails.getUser(), response);
+	@PutMapping("/{postId}/comment/{commentId}/likes")
+	public Object commentLike(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
+		CommentResponseDto responseDto = commentService.commentLike(postId, commentId, userDetails.getUser(), response);
 
 		if (response.getStatus() == 400) {
 			return globalExceptionHandler.badRequestException(ErrorCode.USER_NOT_ERROR);
