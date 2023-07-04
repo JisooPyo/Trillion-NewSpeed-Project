@@ -28,8 +28,8 @@ public class Comment extends Timestamped {
 	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
-	@Column(name = "likes")
-	private int likes;
+	@Column(name = "likeCnt")
+	private long likeCnt;
 
 	public Comment(Post post, CommentRequestDto requestDto, User user) {
 		this.post = post;
@@ -41,7 +41,7 @@ public class Comment extends Timestamped {
 		this.commentContents = requestDto.getCommentContents();
 	}
 
-	public void updateLikes() {
-		this.likes++;
+	public void updateLikeCnt(long likeCnt) {
+		this.likeCnt = likeCnt;
 	}
 }
