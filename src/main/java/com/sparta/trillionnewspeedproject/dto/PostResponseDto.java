@@ -1,32 +1,37 @@
 package com.sparta.trillionnewspeedproject.dto;
 
-import com.sparta.trillionnewspeedproject.entity.Posts;
+import com.sparta.trillionnewspeedproject.entity.Post;
+import com.sparta.trillionnewspeedproject.dto.ApiResponseDto;
+import com.sparta.trillionnewspeedproject.dto.CommentResponseDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
-@NoArgsConstructor
-public class PostResponseDto {
-    private Long postid;
+@Setter
+public class PostResponseDto extends ApiResponseDto {
+    private Long id;
     private String title;
-    private String username;
+    private String content;
     private LocalDateTime createdAt;
-    private LocalDateTime  modifiedAt;
-    private String contents;
+    private LocalDateTime modifiedAt;
+    private String username;
+    private List<CommentResponseDto> comments;
 
-
-    public PostResponseDto(Posts posts){
-        this.postid = posts.getPostid();
-        this.title = posts.getTitle();
-        this.username = posts.getUsername();
-        this.contents = posts.getContents();
-        this.createdAt = posts.getCreatedAt();
-        this.modifiedAt = posts.getModifiedAt();
+    public PostResponseDto(Post post) {
+        this.id = post.getPost_id();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.createdAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.username = post.getUser().getUsername();
+        this.comments = post.getComments().stream()
+            .map(CommentResponseDto::new)
+            .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순 - reversed,
+                // getCreatedAt - 작성일자, comparing - 비교 연산자, sorted - 정렬
+            .toList();
     }
-
-//    public PostResponseDto(Boolean success) {
-//        this.success = success;
-//    }
 }

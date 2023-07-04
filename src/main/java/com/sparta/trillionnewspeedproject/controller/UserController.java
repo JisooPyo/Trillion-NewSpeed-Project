@@ -1,66 +1,51 @@
 package com.sparta.trillionnewspeedproject.controller;
 
-import com.sparta.trillionnewspeedproject.dto.SignupRequestDto;
-import com.sparta.trillionnewspeedproject.dto.UserInfoDto;
-import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
-import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sparta.trillionnewspeedproject.dto.ApiResponseDto;
+import com.sparta.trillionnewspeedproject.dto.AuthRequestDto;
+import com.sparta.trillionnewspeedproject.jwt.JwtUtil;
 import com.sparta.trillionnewspeedproject.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-
-@Slf4j
-@Controller
+@RestController
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class UserController {
-
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    @GetMapping("/user/login-page")
-    public String loginPage() {
-        return "login";
-    }
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponseDto> signUp(@Valid @RequestBody AuthRequestDto requestDto) {
 
-    @GetMapping("/user/signup")
-    public String signupPage() {
-        return "signup";
-    }
-
-    @PostMapping("/user/signup")
-    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
-        // Validation 예외처리
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if (fieldErrors.size() > 0) {
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
-            }
-            return "redirect:/api/user/signup";
+        try {
+            userService.signup(requestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("중복된 username 입니다.", HttpStatus.BAD_REQUEST.value()));
         }
 
-        userService.signup(requestDto);
-
-        return "redirect:/api/user/login-page";
+        return ResponseEntity.status(201).body(new ApiResponseDto("회원가입 성공", HttpStatus.CREATED.value()));
     }
 
-    // 회원 관련 정보 받기
-    @GetMapping("/user-info")
-    @ResponseBody
-    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
+    //로그인
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponseDto> login(@RequestBody AuthRequestDto loginRequestDto, HttpServletResponse response) {
+        try {
+            userService.login(loginRequestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()));
+        }
 
-        return new UserInfoDto(username, isAdmin);
+        //JWT 생성 및 쿠키에 저장 후 Response 객체에 추가
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getUsername(), loginRequestDto.getRole()));
+
+        return ResponseEntity.ok().body(new ApiResponseDto("로그인 성공", HttpStatus.CREATED.value()));
     }
 }

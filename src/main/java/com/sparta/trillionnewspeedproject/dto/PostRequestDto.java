@@ -1,16 +1,11 @@
 package com.sparta.trillionnewspeedproject.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Setter
 public class PostRequestDto {
-
     private String title;
-    private String username;
-    private String contents;
-    private String createdAt;
+    private String content;
 }

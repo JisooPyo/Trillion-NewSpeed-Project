@@ -1,73 +1,78 @@
 package com.sparta.trillionnewspeedproject.service;
 
-import com.sparta.trillionnewspeedproject.dto.PostRequestDto;
-import com.sparta.trillionnewspeedproject.dto.PostResponseDto;
-import com.sparta.trillionnewspeedproject.entity.Posts;
-import com.sparta.trillionnewspeedproject.entity.User;
-import com.sparta.trillionnewspeedproject.repository.PostRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.sparta.trillionnewspeedproject.dto.PostListResponseDto;
+import com.sparta.trillionnewspeedproject.dto.PostRequestDto;
+import com.sparta.trillionnewspeedproject.dto.PostResponseDto;
+import com.sparta.trillionnewspeedproject.entity.Post;
+import com.sparta.trillionnewspeedproject.entity.User;
+import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
+import com.sparta.trillionnewspeedproject.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
 
-    // 게시물 작성
-    @Transactional  //  생성,수정,삭제 무조건
-    public PostResponseDto createPost(PostRequestDto postRequest, User user) {
-        Posts posts = postRepository.save(new Posts(postRequest, user));
-        return new PostResponseDto(posts);
-//        Posts posts =new Posts(postRequest,user);
-//        Posts savePosts = postRepository.save(posts);
-//        PostResponseDto postResponseDto = new PostResponseDto(savePosts);
-//        return postResponseDto;
+    public PostResponseDto createPost(PostRequestDto requestDto, User user) {
+        Post post = new Post(requestDto);
+        post.setUser(user);
 
+        postRepository.save(post);
 
-//        Posts posts = new Posts(postRequest);
-//
-//        Posts savePost = postRepository.save(posts);
-//
-//        PostResponseDto postResponseDto = new PostResponseDto(savePost);
-//
-//        return postResponseDto;
+        return new PostResponseDto(post);
     }
 
-    //특정 게시글 조회
-    public PostResponseDto getPost(Long postid) {
-        Posts posts = findPosts(postid);
-        return new PostResponseDto(posts);
+    public PostListResponseDto getPosts() {
+        List<PostResponseDto> postList = postRepository.findAll().stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new PostListResponseDto(postList);
     }
 
-    // 게시글 수정
-    public PostResponseDto updatePost(Long postid, PostRequestDto requestDto) {
-        Posts posts = findPosts(postid);
+    public PostResponseDto getPostById(Long id) {
+        Post post = findPost(id);
 
-        // 유저 id에 맞는 게시글인지 검증 후 수정 진행
-        posts.setTitle(requestDto.getTitle());
-        posts.setContents(requestDto.getContents());
-
-        return new PostResponseDto(posts);
+        return new PostResponseDto(post);
     }
 
-    // 게시글 삭제
-    public PostResponseDto deletePost(Long postid) {
-        Posts posts = findPosts(postid);
-        postRepository.delete(posts);
+    public void deletePost(Long id, User user) {
+        Post post = findPost(id);
 
-        return new PostResponseDto(posts);
+        // 게시글 작성자(post.user) 와 요청자(user) 가 같은지 또는 Admin 인지 체크 (아니면 예외발생)
+        if (!(user.getRole().equals(UserRoleEnum.ADMIN) || post.getUser().equals(user))) {
+            throw new RejectedExecutionException();
+        }
+
+        postRepository.delete(post);
     }
 
+    @Transactional
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
+        Post post = findPost(id);
 
-    // 게시글 존재 확인
-    private Posts findPosts(Long postid) {
-        return postRepository.findById(postid).orElseThrow(() ->
+        // 게시글 작성자(post.user) 와 요청자(user) 가 같은지 또는 Admin 인지 체크 (아니면 예외발생)
+        if (!(user.getRole().equals(UserRoleEnum.ADMIN) || post.getUser().equals(user))) {
+            throw new RejectedExecutionException();
+        }
+
+        post.setTitle(requestDto.getTitle());
+        post.setContent(requestDto.getContent());
+
+        return new PostResponseDto(post);
+    }
+
+    public Post findPost(long id) {
+        return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
         );
-
     }
-
-
 }

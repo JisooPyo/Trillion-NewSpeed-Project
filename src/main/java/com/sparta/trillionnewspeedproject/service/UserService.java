@@ -1,53 +1,48 @@
 package com.sparta.trillionnewspeedproject.service;
 
-import com.sparta.trillionnewspeedproject.dto.SignupRequestDto;
-import com.sparta.trillionnewspeedproject.entity.User;
-import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
-import com.sparta.trillionnewspeedproject.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.sparta.trillionnewspeedproject.dto.AuthRequestDto;
+import com.sparta.trillionnewspeedproject.entity.User;
+import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
+import com.sparta.trillionnewspeedproject.jwt.JwtUtil;
+import com.sparta.trillionnewspeedproject.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ADMIN_TOKEN
-    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final UserRepository userRepository;
 
-    public void signup(SignupRequestDto requestDto) {
+    public void signup(AuthRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
+        UserRoleEnum role = requestDto.getRole();
 
-        // 회원 중복 확인
-        Optional<User> checkUsername = userRepository.findByUsername(username);
-        if (checkUsername.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+        if (userRepository.findByUsername(username).isPresent()) {  // isPresent null인지 아닌지 확인
+            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
 
-        // email 중복확인
-        String email = requestDto.getEmail();
-        Optional<User> checkEmail = userRepository.findByEmail(email);
-        if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 Email 입니다.");
-        }
-
-        // 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-            role = UserRoleEnum.ADMIN;
-        }
-
-        // 사용자 등록
-        User user = new User(username, password, email, role);
+        User user = new User(username, password, role);
         userRepository.save(user);
+    }
+
+    public void login(AuthRequestDto requestDto) {
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
+
+        //사용자 확인 (username 이 없는경우)
+        User user = userRepository.findByUsername(username).orElseThrow(  // orElseThrow : null 이 아니면 응답, null이면 exception 발생
+                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+
+        //비밀번호 확인 (password 가 다른 경우)
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
