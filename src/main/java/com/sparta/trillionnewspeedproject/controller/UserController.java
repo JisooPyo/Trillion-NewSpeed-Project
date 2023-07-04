@@ -48,7 +48,7 @@ public class UserController {
             response.setStatus(400);
             return new ResponseMessageDto(errorMessage.toString(), response.getStatus());
         }
-        return new ResponseMessageDto(userService.signup(requestDto,response),response.getStatus());
+        return userService.signup(requestDto,response);
     }
 
     // 회원 관련 정보 받기(프로필 조회)
@@ -73,12 +73,14 @@ public class UserController {
         return userService.modifyUserPassword(userDetails.getUser(),requestDto,response);
     }
 
+    //아이디 찾기
     @PostMapping("/user/findid")
     @ResponseBody
     public Object findID(@RequestBody FindIDRequestDto requestDto,HttpServletResponse response){
         return userService.findID(requestDto,response);
     }
 
+    //비밀번호 찾기
     @PostMapping("/user/findpw")
     @ResponseBody
     public ResponseMessageDto findPW(@RequestBody FindPWRequestDto requestDto,HttpServletResponse response){
