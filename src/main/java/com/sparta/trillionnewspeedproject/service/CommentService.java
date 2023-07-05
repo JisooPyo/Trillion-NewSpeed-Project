@@ -3,8 +3,10 @@ package com.sparta.trillionnewspeedproject.service;
 import com.sparta.trillionnewspeedproject.dto.CommentRequestDto;
 import com.sparta.trillionnewspeedproject.dto.CommentResponseDto;
 import com.sparta.trillionnewspeedproject.entity.Comment;
+import com.sparta.trillionnewspeedproject.entity.CommentLike;
 import com.sparta.trillionnewspeedproject.entity.Post;
 import com.sparta.trillionnewspeedproject.entity.User;
+import com.sparta.trillionnewspeedproject.repository.CommentLikeRepository;
 import com.sparta.trillionnewspeedproject.repository.CommentRepository;
 import com.sparta.trillionnewspeedproject.repository.PostRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,10 +23,11 @@ public class CommentService {
 
 	private final CommentRepository commentRepository;
 	private final PostRepository postRepository;
+	private final CommentLikeRepository commentLikeRepository;
 
 	// 선택한 게시글에 대한 댓글 전체 조회
 	public List<CommentResponseDto> getCommentsByPostId(Long postId) {
-		return commentRepository.findAllByPost_idOrderByCreatedAtDesc(postId).stream().map(CommentResponseDto::new).toList();
+		return commentRepository.findAllByPostOrderByCreatedAtDesc(findPost(postId)).stream().map(CommentResponseDto::new).toList();
 	}
 
 	// 댓글 작성
@@ -41,7 +44,7 @@ public class CommentService {
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user, HttpServletResponse response) {
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != findComment(commentId).getPost().getPost_id()) {
 			response.setStatus(404);
 			return null;
 
@@ -62,7 +65,7 @@ public class CommentService {
 	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user, HttpServletResponse response) {
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != findComment(commentId).getPost().getPost_id()) {
 			response.setStatus(404);
 
 		// 다른 유저가 삭제를 시도할 경우 오류 코드 반환
@@ -75,11 +78,13 @@ public class CommentService {
 		}
 	}
 
+	@Transactional
 	// 선택한 댓글 좋아요 기능 추가
-	public CommentResponseDto commentLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+	public CommentResponseDto commentInsertLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+		Comment comment = findComment(commentId);
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != comment.getPost().getPost_id()) {
 			response.setStatus(404);
 			return null;
 
@@ -88,12 +93,43 @@ public class CommentService {
 			response.setStatus(400);
 			return null;
 
+		// 좋아요를 이미 누른 경우 오류 코드 반환
+		} else if (findCommentLike(user, comment) != null) {
+			response.setStatus(409);
+			return null;
+
 		// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
 		} else {
-			Comment comment = findComment(commentId);
-			comment.updateLikes();
-			Comment savedComment = commentRepository.save(comment);
-			CommentResponseDto commentResponseDto = new CommentResponseDto(savedComment);
+			commentLikeRepository.save(new CommentLike(user, comment));
+			comment.insertLikeCnt();
+			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
+			return commentResponseDto;
+		}
+	}
+
+	public CommentResponseDto commentDeleteLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+		Comment comment = findComment(commentId);
+
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
+		if (postId != comment.getPost().getPost_id()) {
+			response.setStatus(404);
+			return null;
+
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		} else if (checkUser(commentId, user)) {
+			response.setStatus(400);
+			return null;
+
+		// 좋아요를 누른 적이 없는 경우 오류 코드 반환
+		} else if (findCommentLike(user, comment) == null) {
+			response.setStatus(409);
+			return null;
+
+		// 오류가 나지 않을 경우 해당 댓글 좋아요 취소
+		} else {
+			commentLikeRepository.delete(findCommentLike(user, comment));
+			comment.deleteLikeCnt();
+			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
 			return commentResponseDto;
 		}
 	}
@@ -103,6 +139,11 @@ public class CommentService {
 		return commentRepository.findById(commentId).orElseThrow(() ->
 				new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
 		);
+	}
+
+	// 사용자와 댓글에 따른 좋아요 찾기
+	private CommentLike findCommentLike(User user, Comment comment) {
+		return commentLikeRepository.findByUserAndComment(user,comment).orElse(null);
 	}
 
 	// id에 따른 게시글 찾기
