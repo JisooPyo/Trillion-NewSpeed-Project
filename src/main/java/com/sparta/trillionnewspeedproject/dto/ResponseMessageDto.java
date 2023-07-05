@@ -1,5 +1,4 @@
 package com.sparta.trillionnewspeedproject.dto;
-
 import lombok.Getter;
 
 @Getter
