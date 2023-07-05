@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -28,8 +30,12 @@ public class Comment extends Timestamped {
 	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
-	@Column(name = "likes")
-	private int likes;
+	@Column(name = "likeCnt")
+	private long likeCnt;
+
+	@OneToMany(mappedBy = "comment", orphanRemoval = true)
+	private List<CommentLike> commentLikeList;
+
 
 	public Comment(Post post, CommentRequestDto requestDto, User user) {
 		this.post = post;
@@ -41,7 +47,11 @@ public class Comment extends Timestamped {
 		this.commentContents = requestDto.getCommentContents();
 	}
 
-	public void updateLikes() {
-		this.likes++;
+	public void insertLikeCnt() {
+		this.likeCnt++;
+	}
+
+	public void deleteLikeCnt() {
+		this.likeCnt--;
 	}
 }
