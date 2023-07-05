@@ -16,7 +16,7 @@ public class CommentLike {
 	private Long commentLikeId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "username")
+	@JoinColumn(name = "userId")
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -16,7 +16,7 @@ import java.util.List;
 public class Comment extends Timestamped {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "post_postId", nullable = false)
+	@JoinColumn(name = "postId", nullable = false)
 	private Post post;
 
 	@Id

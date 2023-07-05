@@ -27,7 +27,7 @@ public class CommentService {
 
 	// 선택한 게시글에 대한 댓글 전체 조회
 	public List<CommentResponseDto> getCommentsByPostId(Long postId) {
-		return commentRepository.findAllByPost_idOrderByCreatedAtDesc(postId).stream().map(CommentResponseDto::new).toList();
+		return commentRepository.findAllByPostOrderByCreatedAtDesc(findPost(postId)).stream().map(CommentResponseDto::new).toList();
 	}
 
 	// 댓글 작성
@@ -44,7 +44,7 @@ public class CommentService {
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user, HttpServletResponse response) {
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != findComment(commentId).getPost().getPost_id()) {
 			response.setStatus(404);
 			return null;
 
@@ -65,7 +65,7 @@ public class CommentService {
 	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user, HttpServletResponse response) {
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != findComment(commentId).getPost().getPost_id()) {
 			response.setStatus(404);
 
 		// 다른 유저가 삭제를 시도할 경우 오류 코드 반환
@@ -84,7 +84,7 @@ public class CommentService {
 		Comment comment = findComment(commentId);
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != comment.getPost().getId()) {
+		if (postId != comment.getPost().getPost_id()) {
 			response.setStatus(404);
 			return null;
 
@@ -111,7 +111,7 @@ public class CommentService {
 		Comment comment = findComment(commentId);
 
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != comment.getPost().getId()) {
+		if (postId != comment.getPost().getPost_id()) {
 			response.setStatus(404);
 			return null;
 
