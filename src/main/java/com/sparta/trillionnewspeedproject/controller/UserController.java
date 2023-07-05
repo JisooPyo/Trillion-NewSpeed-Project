@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     //get요청에 대해 로그인페이지 html 전달
-    @GetMapping("/user/login")
+    @GetMapping("/user/login-page")
     public String loginPage() {
         return "APIExamNaverLogin";
     }
