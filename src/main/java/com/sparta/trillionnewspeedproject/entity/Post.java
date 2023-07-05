@@ -27,6 +27,12 @@ public class Post extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "likeCnt")
+    private long likeCnt;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostLike> postLikeList;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)  // cascade( 영속성 전이 ) : 연관 관계 같이 삭제
     private List<Comment> comments;
 
@@ -45,5 +51,13 @@ public class Post extends Timestamped {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void insertLikeCnt() {
+        this.likeCnt++;
+    }
+
+    public void deleteLikeCnt() {
+        this.likeCnt--;
     }
 }

@@ -19,6 +19,7 @@ public class PostResponseDto extends ApiResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String username;
+    private long likeCnt;
     private List<CommentResponseDto> comments;
 
     public PostResponseDto(Post post) {
@@ -28,6 +29,7 @@ public class PostResponseDto extends ApiResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.username = post.getUser().getUsername();
+        this.likeCnt = post.getLikeCnt();
         this.comments = post.getComments().stream()
             .map(CommentResponseDto::new)
             .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순 - reversed,

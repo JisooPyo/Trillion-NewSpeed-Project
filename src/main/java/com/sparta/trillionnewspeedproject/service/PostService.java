@@ -1,9 +1,14 @@
 package com.sparta.trillionnewspeedproject.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
+import com.sparta.trillionnewspeedproject.entity.PostLike;
+import com.sparta.trillionnewspeedproject.repository.PostLikeRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
         Post post = new Post(requestDto);
@@ -74,5 +80,57 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
         );
+    }
+
+    @Transactional
+    // 선택한 댓글 좋아요 기능 추가
+    public PostResponseDto postInsertLike(Long postId, User user) {
+        Post post = findPost(postId);
+        // 작성자가 좋아요를 시도할 경우 오류 코드 반환
+        if (checkUser(postId, user)) {
+            throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+        }
+        // 좋아요를 이미 누른 경우 오류 코드 반환
+        if (findPostLike(user, post) != null) {
+            throw new DataIntegrityViolationException("좋아요를 이미 누르셨습니다.");
+        }
+        // 오류가 나지 않을 경우 해당 댓글 좋아요 추가
+        postLikeRepository.save(new PostLike(user, post));
+        post.insertLikeCnt();
+        PostResponseDto postResponseDto = new PostResponseDto(postRepository.save(post));
+        return postResponseDto;
+    }
+
+    // 선택한 댓글 좋아요 취소
+    public PostResponseDto postDeleteLike(Long postId, User user) {
+        Post post = findPost(postId);
+        // 작성자가 좋아요를 시도할 경우 오류 코드 반환
+        if (checkUser(postId, user)) {
+            throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+        }
+        // 좋아요를 이미 누른 경우 오류 코드 반환
+        if (findPostLike(user, post) == null) {
+            throw new NoSuchElementException("좋아요를 누르시지 않았습니다.");
+        }
+        // 오류가 나지 않을 경우 해당 댓글 좋아요 추가
+        postLikeRepository.delete(findPostLike(user, post));
+        post.deleteLikeCnt();
+        PostResponseDto postResponseDto = new PostResponseDto(postRepository.save(post));
+        return postResponseDto;
+    }
+
+    // 사용자와 댓글에 따른 좋아요 찾기
+    private PostLike findPostLike(User user, Post post) {
+        return postLikeRepository.findByUserAndPost(user,post).orElse(null);
+    }
+
+    // 선택한 게시글의 사용자가 맞는지 혹은 관리자인지 확인하기
+    private boolean checkUser(Long selectId, User user) {
+        Post post = findPost(selectId);
+        if (post.getUser().getUserId().equals(user.getUserId()) || user.getRole().getAuthority().equals("ADMIN")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
