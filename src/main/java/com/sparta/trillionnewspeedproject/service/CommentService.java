@@ -88,20 +88,20 @@ public class CommentService {
 			response.setStatus(404);
 			return null;
 
-			// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
 		} else if (checkUser(commentId, user)) {
 			response.setStatus(400);
 			return null;
 
-			// 좋아요를 이미 누른 경우 오류 코드 반환
+		// 좋아요를 이미 누른 경우 오류 코드 반환
 		} else if (findCommentLike(user, comment) != null) {
 			response.setStatus(409);
 			return null;
 
-			// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
+		// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
 		} else {
 			commentLikeRepository.save(new CommentLike(user, comment));
-			comment.updateLikeCnt(commentLikeRepository.count());
+			comment.insertLikeCnt();
 			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
 			return commentResponseDto;
 		}
@@ -115,20 +115,20 @@ public class CommentService {
 			response.setStatus(404);
 			return null;
 
-			// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
 		} else if (checkUser(commentId, user)) {
 			response.setStatus(400);
 			return null;
 
-			// 좋아요를 누른 적이 없는 경우 오류 코드 반환
+		// 좋아요를 누른 적이 없는 경우 오류 코드 반환
 		} else if (findCommentLike(user, comment) == null) {
 			response.setStatus(409);
 			return null;
 
-			// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
+		// 오류가 나지 않을 경우 해당 댓글 좋아요 취소
 		} else {
 			commentLikeRepository.delete(findCommentLike(user, comment));
-			comment.updateLikeCnt(commentLikeRepository.count());
+			comment.deleteLikeCnt();
 			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
 			return commentResponseDto;
 		}
