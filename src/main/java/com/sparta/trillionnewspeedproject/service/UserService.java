@@ -3,8 +3,6 @@ package com.sparta.trillionnewspeedproject.service;
 import com.sparta.trillionnewspeedproject.dto.*;
 import com.sparta.trillionnewspeedproject.entity.User;
 import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
-import com.sparta.trillionnewspeedproject.exception.ErrorCode;
-import com.sparta.trillionnewspeedproject.exception.GlobalExceptionHandler;
 import com.sparta.trillionnewspeedproject.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +24,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
 
-    private final GlobalExceptionHandler globalExceptionHandler;
 
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -35,7 +32,7 @@ public class UserService {
     //회원가입 메서드
     //회원가입을 위해 요청받은 requestBody 내 정보(userId,username,password,introduce,email)을 이용하여 계정 생성
     //userId, Email은 중복 불가능
-    public ResponseMessageDto signup(SignupRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto signup(SignupRequestDto requestDto, HttpServletResponse response) {
         String userId = requestDto.getUserId();
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -47,22 +44,18 @@ public class UserService {
         Optional<User> checkEmail = userRepository.findByEmail(email);
 
         if (checkUserId.isPresent()) {
-            response.setStatus(400);
-            return globalExceptionHandler.badRequestException(ErrorCode.USERID_EXIST_ERROR);
-
+            throw new IllegalArgumentException("이미 존재하는 ID입니다.");
         }
 
         if (checkEmail.isPresent()) {
-            response.setStatus(400);
-            return globalExceptionHandler.badRequestException(ErrorCode.EMAIL_EXIST_ERROR);
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                response.setStatus(400);
-                return new ResponseMessageDto( " 관리자 암호가 틀려 등록이 불가능합니다.", response.getStatus());
+                throw new IllegalArgumentException( "관리자 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -70,7 +63,7 @@ public class UserService {
         User user = new User(userId, username, password, email, introduce, role);
         userRepository.save(user);
         response.setStatus(200);
-        return new ResponseMessageDto( "회원가입 완료", response.getStatus());
+        return new ApiResponseDto( "회원가입 완료", response.getStatus());
     }
 
     //userId로 User 찾기
@@ -82,28 +75,26 @@ public class UserService {
 
     //로그인한 사용자의 프로필을 얻는 메서드
     //user가 존재하면 프로필정보(이름, 이메일, 한줄소개) return
-    public Object getUserProfile(User user, HttpServletResponse response) {
+    public ApiResponseDto getUserProfile(User user, HttpServletResponse response) {
         User targetUser = findUser(user.getUserId());
         if (targetUser != null) {
             return new UserProfileResponseDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getIntroduce());
         } else {
-            response.setStatus(400);
-            return new ResponseMessageDto("해당 사용자는 존재하지 않습니다.", response.getStatus());
+            throw new IllegalArgumentException("해당 사용자는 존재하지 않습니다.");
         }
     }
 
     //사용자 프로필을 변경하는 메서드
     //user가 존재할 경우, requestBody의 username, introduce 값으로 변경
     @Transactional
-    public ResponseMessageDto modifyUserProfile(User user, UserProfileRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto modifyUserProfile(User user, UserProfileRequestDto requestDto, HttpServletResponse response) {
         User targetUser = findUser(user.getUserId());
         if (targetUser != null) {
             targetUser.modifyProfile(requestDto);
             response.setStatus(201);
-            return new ResponseMessageDto("프로필 변경이 완료되었습니다.", response.getStatus());
+            return new ApiResponseDto("프로필 변경이 완료되었습니다.", response.getStatus());
         } else {
-            response.setStatus(400);
-            return new ResponseMessageDto("해당 아이디는 존재하지 않습니다.", response.getStatus());
+            throw new IllegalArgumentException("해당 아이디는 존재하지 않습니다.");
         }
     }
 
@@ -111,39 +102,35 @@ public class UserService {
     //1. user가 존재할 경우, 존재하는 유저의 password와 requestBody에 입력된 password가 일치하는지 확인
     //2. 비밀번호 대조결과 일치하는 경우, requestBody에 읿력된 modifypassword값으로 비밀번호 변경
     @Transactional
-    public ResponseMessageDto modifyUserPassword(User user, UserPasswordRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto modifyUserPassword(User user, UserPasswordRequestDto requestDto, HttpServletResponse response) {
         User targetUser = findUser(user.getUserId());
         if (targetUser != null) {
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 response.setStatus(201);
                 targetUser.modifyPassword(passwordEncoder.encode(requestDto.getModifyPassword()));
             } else {
-                response.setStatus(400);
-                return new ResponseMessageDto("비밀번호가 틀립니다.", response.getStatus());
+                throw new IllegalArgumentException("비밀번호가 틀립니다.");
             }
         } else {
-            response.setStatus(400);
-            return new ResponseMessageDto("해당 사용자는 존재하지 않습니다.", response.getStatus());
+            throw new IllegalArgumentException("해당 사용자는 존재하지 않습니다.");
         }
-        return new ResponseMessageDto("비밀번호 변경이 완료되었습니다.", response.getStatus());
+        return new ApiResponseDto("비밀번호 변경이 완료되었습니다.", response.getStatus());
     }
 
 
     //아이디찾기 메서드
     //requestBody내 email정보를 통해 대상user를 찾고, 찾은 user의 이름이 requestBody에 입력된 username과 일치할 경우
     //아이디정보를 전달
-    public Object findID(FindIDRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto findID(FindIDRequestDto requestDto, HttpServletResponse response) {
         User targetUser = userRepository.findByEmail(requestDto.getEmail()).orElse(null);
         if(targetUser!=null) {
             if (targetUser.getUsername().equals(requestDto.getUsername())) {
                 return new FindIDResponseDto(targetUser);
             } else {
-                response.setStatus(400);
-                return new ResponseMessageDto("사용자명이 일치하지 않습니다.", response.getStatus());
+                throw new IllegalArgumentException("사용자명이 일치하지 않습니다.");
             }
         }else{
-            response.setStatus(400);
-            return new ResponseMessageDto("해당 이메일로 가입한 사용자가 없습니다.", response.getStatus());
+            throw new IllegalArgumentException("해당 이메일로 가입한 사용자가 없습니다.");
         }
     }
 
@@ -152,21 +139,20 @@ public class UserService {
     //찾은 user의 정보와 requestBody 내 email, username정보가 모두 일치하면
     //비밀번호를 랜덤값으로 변경하고, 사용자 이메일에 비밀번호를 전송
     @Transactional
-    public ResponseMessageDto findPW(FindPWRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto findPW(FindPWRequestDto requestDto, HttpServletResponse response) {
         User targetUser = findUser(requestDto.getUserId());
         if (targetUser != null) {
             if (targetUser.getUsername().equals(requestDto.getUsername()) && targetUser.getEmail().equals(requestDto.getEmail())) {
                 String tempPW = getTempPassword();
                 targetUser.modifyPassword(passwordEncoder.encode(tempPW));//임시 비밀번호 업데이트
                 mailSend(requestDto, tempPW);
-                return new ResponseMessageDto("입력하신 이메일로 임시 비밀번호를 전달했습니다.", response.getStatus());
+                response.setStatus(200);
+                return new ApiResponseDto("입력하신 이메일로 임시 비밀번호를 전달했습니다.", response.getStatus());
             } else {
-                response.setStatus(400);
-                return new ResponseMessageDto("사용자명 또는 이메일이 일치하지 않습니다.", response.getStatus());
+                throw new IllegalArgumentException("사용자명 또는 이메일이 일치하지 않습니다.");
             }
         } else {
-            response.setStatus(400);
-            return new ResponseMessageDto("해당 아이디는 존재하지 않습니다.", response.getStatus());
+            throw new IllegalArgumentException("해당 아이디는 존재하지 않습니다.");
         }
     }
 
@@ -195,4 +181,18 @@ public class UserService {
         }
         return str;
     }
+
+    //회원가입 시, 이메일
+//    public ResponseMessageDto emailConfirm(EmailConfirmRequestDto requestDto, HttpServletResponse response) {
+//        String email = requestDto.getEmail();
+//        // email 중복확인
+//        Optional<User> checkEmail = userRepository.findByEmail(email);
+//
+//        //이미 가입된 이메일이 존재하는 경우 - 에러메시지 전달
+//        if (checkEmail.isPresent()) {
+//            response.setStatus(400);
+//            return globalExceptionHandler.badRequestException(ErrorCode.EMAIL_EXIST_ERROR);
+//        }
+//
+//    }
 }

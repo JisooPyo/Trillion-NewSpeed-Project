@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserProfileResponseDto {
+public class UserProfileResponseDto extends ApiResponseDto{
     String userId;
     String username;
     String email;

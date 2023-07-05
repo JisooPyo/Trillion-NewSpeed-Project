@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 @Getter
 @AllArgsConstructor
-public class FindIDResponseDto {
+public class FindIDResponseDto extends ApiResponseDto{
     String userId;
         public FindIDResponseDto(User user){
             this.userId = user.getUserId();

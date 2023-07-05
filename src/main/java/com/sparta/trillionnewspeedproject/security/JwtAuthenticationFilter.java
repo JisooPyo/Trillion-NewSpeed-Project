@@ -1,11 +1,9 @@
 package com.sparta.trillionnewspeedproject.security;
 
-import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.trillionnewspeedproject.dto.ApiResponseDto;
 import com.sparta.trillionnewspeedproject.dto.LoginRequestDto;
-import com.sparta.trillionnewspeedproject.dto.ResponseMessageDto;
 import com.sparta.trillionnewspeedproject.entity.UserRoleEnum;
 import com.sparta.trillionnewspeedproject.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -64,8 +62,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token); //헤더에 Authorztion = Bearer {JWT} 추가
 
         //client에 응답하기 "message" = "로그인 성공"/ "status" = "200"
-        ResponseMessageDto responseMessageDto = new ResponseMessageDto("로그인 성공", response.getStatus());
-        String jsonResponseBody = new ObjectMapper().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true).writeValueAsString(responseMessageDto);//한글깨짐문제 방지
+        ApiResponseDto apiResponseDto = new ApiResponseDto("로그인 성공", response.getStatus());
+        String jsonResponseBody = new ObjectMapper().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true).writeValueAsString(apiResponseDto);//한글깨짐문제 방지
         response.setContentType("application/json"); //contenttype : json방식으로 응답 전달
         response.getWriter().write(jsonResponseBody);
         response.getWriter().flush();
@@ -78,8 +76,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(400);
 
         //client에 응답하기 "message" = "로그인 실패"/ "status" = "400"
-        ResponseMessageDto responseMessageDto = new ResponseMessageDto("로그인 실패", response.getStatus());
-        String jsonResponseBody = new ObjectMapper().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true).writeValueAsString(responseMessageDto);
+        ApiResponseDto apiResponseDto = new ApiResponseDto("로그인 실패", response.getStatus());
+        String jsonResponseBody = new ObjectMapper().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true).writeValueAsString(apiResponseDto);
         response.setContentType("application/json");
         response.getWriter().write(jsonResponseBody);
         response.getWriter().flush();

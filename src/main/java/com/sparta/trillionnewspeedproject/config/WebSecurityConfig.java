@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -75,12 +76,13 @@ public class WebSecurityConfig {
                         .requestMatchers("/").permitAll() // 기본 페이지 요청 허가
                         .requestMatchers("/api/user/signup").permitAll() // '/api/user/signup' 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login").permitAll() // '/api/user/login' 요청은 모든 사용자에게 허용
-                       .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+                        .requestMatchers("/api/user/login-page").permitAll()
+                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         //인증 필요한 요청을 받았을때 인증정보가 없는 경우, formLogin이용 페이지이동하도록 설정(현재 html이 없으므로 disable()해놓은 상태)
         http.formLogin((formLogin) ->
-                formLogin.disable()
+                        formLogin.disable()
 //                        .loginPage("/api/user/login").permitAll()
 
         );
