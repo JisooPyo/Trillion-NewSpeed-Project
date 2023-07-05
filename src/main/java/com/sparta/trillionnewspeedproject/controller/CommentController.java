@@ -1,34 +1,27 @@
 package com.sparta.trillionnewspeedproject.controller;
 
+import com.sparta.trillionnewspeedproject.dto.ApiResponseDto;
 import com.sparta.trillionnewspeedproject.dto.CommentRequestDto;
 import com.sparta.trillionnewspeedproject.dto.CommentResponseDto;
-import com.sparta.trillionnewspeedproject.dto.ApiResponseDto;
-import com.sparta.trillionnewspeedproject.exception.ErrorCode;
-import com.sparta.trillionnewspeedproject.exception.GlobalExceptionHandler;
 import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
 import com.sparta.trillionnewspeedproject.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.RejectedExecutionException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
 public class CommentController {
 	private final CommentService commentService;
-	private final GlobalExceptionHandler globalExceptionHandler;
 
 	// 선택한 게시글에 대한 모든 댓글 조회
 	@GetMapping("/{postId}/comments")
@@ -111,7 +104,7 @@ public class CommentController {
 
 	// 선택한 댓글 좋아요 취소
 	@DeleteMapping("/{postId}/comments/{commentId}/like")
-	public Object commentDeleteLike(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<ApiResponseDto> commentDeleteLike(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		// 오류가 나지 않을 경우 해당 댓글 좋아요 취소
 		try {
 			CommentResponseDto responseDto = commentService.commentDeleteLike(postId, commentId, userDetails.getUser());

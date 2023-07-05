@@ -10,19 +10,15 @@ import com.sparta.trillionnewspeedproject.repository.CommentLikeRepository;
 import com.sparta.trillionnewspeedproject.repository.CommentRepository;
 import com.sparta.trillionnewspeedproject.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MissingPathVariableException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.RejectedExecutionException;
 
 @Service
 @RequiredArgsConstructor
