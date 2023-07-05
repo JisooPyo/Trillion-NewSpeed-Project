@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
+//Spring Security에서 사용자정보를 제공하기 위함
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
