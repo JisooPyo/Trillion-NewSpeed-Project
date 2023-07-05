@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,7 +26,7 @@ public class UserController {
     //get요청에 대해 로그인페이지 html 전달
     @GetMapping("/user/login")
     public String loginPage() {
-        return "login-page";
+        return "APIExamNaverLogin";
     }
 
     //get요청에 대해 회원가입페이지 html 전달
