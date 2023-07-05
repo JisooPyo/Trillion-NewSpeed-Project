@@ -24,22 +24,26 @@ public class UserController {
 
     private final UserService userService;
 
+    //get요청에 대해 로그인페이지 html 전달
     @GetMapping("/user/login")
     public String loginPage() {
-        return "login";
+        return "login-page";
     }
 
+    //get요청에 대해 회원가입페이지 html 전달
     @GetMapping("/user/signup")
     public String signupPage() {
         return "signup";
     }
 
+
     @PostMapping("/user/signup")
     @ResponseBody
     public Object signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult, HttpServletResponse response) {
-        // Validation 예외처리
+        // Validation 예외처리 - signupRequestDto에서 설정한 글자수, 문자규칙(a~z,A~Z,0~9)에 위배되는 경우 fieldError 리스트에 내용이 추가됨
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         StringBuilder errorMessage = new StringBuilder();
+        //1건 이상 Validation 관련 에러가 발견된 경우 - 에러메시지(1개~ 여러 개)를 message응답으로 client에 전달
         if(fieldErrors.size() > 0) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
