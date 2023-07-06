@@ -35,9 +35,9 @@ public class SignupAuth {
     }
 
     public void changeStatusOK(){
-        authStatus = 1;
+        this.authStatus = 1;
     }
     public void changeStatusNO(){
-        authStatus = 0;
+        this.authStatus = 0;
     }
 }

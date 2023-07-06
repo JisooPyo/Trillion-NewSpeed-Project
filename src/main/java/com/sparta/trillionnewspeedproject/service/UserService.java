@@ -174,7 +174,7 @@ public class UserService {
     //5. 메일에서 받은 인증번호 데이터를 입력했을 때 일치하는 경우, authStatus = 1로 업데이트 (인증 완료.)
     //6. 회원가입 최종 단계에서 검증 authStatus = 1 여부 확인 - (signup메서드에 적용)
     @Transactional
-    public ApiResponseDto Authentication(AuthenticationRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto authentication(AuthenticationRequestDto requestDto, HttpServletResponse response) {
         //0. 인증 테이블 내 인증시간이 만료된 데이터가 있으면 삭제
         signupAuthRepository.deleteExpiredSignupAuth();
 
@@ -210,7 +210,7 @@ public class UserService {
     }
 
     @Transactional
-    public ApiResponseDto Verification(VerificationRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponseDto verification(VerificationRequestDto requestDto, HttpServletResponse response) {
         //DB 저장된 회원가입 인증번호, 이메일 가져오기
         SignupAuth targetSignupAuth = signupAuthRepository.findByEmail(requestDto.getEmail()).orElse(null);
         if (targetSignupAuth == null) {
@@ -219,6 +219,8 @@ public class UserService {
 
         //인증시간이 만료된 경우(생성 후 5분이 지났을 경우)   시간A.isBefore(시간 B) : A가 B보다 과거일 때 true
         if (targetSignupAuth.getExpirationTime().isBefore(LocalDateTime.now())) {
+            targetSignupAuth.changeStatusNO(); // 인증번호 상태값 0으로 변경
+            signupAuthRepository.save(targetSignupAuth); //변경상태를 DB 저장
             throw new IllegalArgumentException("인증번호 발급 후 5분이 경과하였습니다. 인증번호를 다시 발급해주세요.");
         }
 
@@ -226,9 +228,12 @@ public class UserService {
         if (targetSignupAuth.getAuthKey().equals(requestDto.getAuthKey())) {
             System.out.println("인증번호 일치");
             targetSignupAuth.changeStatusOK(); // 인증번호 상태값 1로 변경
+            signupAuthRepository.save(targetSignupAuth); //변경상태를 DB 저장
             return new ApiResponseDto("인증번호 확인이 완료되었습니다.", response.getStatus());
-        } else{//인증번호 대조 - 불일치
+        }
+        else{//인증번호 대조 - 불일치
             targetSignupAuth.changeStatusNO(); // 인증번호 상태값 0으로 변경
+            signupAuthRepository.save(targetSignupAuth); //변경상태를 DB 저장
             throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
         }
     }
