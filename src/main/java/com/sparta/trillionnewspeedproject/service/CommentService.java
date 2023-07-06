@@ -63,7 +63,7 @@ public class CommentService {
 	// 선택한 댓글 삭제
 	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user) {
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
-		if (postId != findComment(commentId).getPost().getId()) {
+		if (postId != findComment(commentId).getPost().getPost_id()) {
 			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
 		// 다른 유저가 삭제를 시도할 경우 예외 처리
@@ -79,7 +79,7 @@ public class CommentService {
 	public CommentResponseDto commentInsertLike(Long postId, Long commentId, User user) {
 		Comment comment = findComment(commentId);
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
-		if (postId != comment.getPost().getId()) {
+		if (postId != comment.getPost().getPost_id()) {
 			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
 		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
@@ -101,7 +101,7 @@ public class CommentService {
 	public CommentResponseDto commentDeleteLike(Long postId, Long commentId, User user) {
 		Comment comment = findComment(commentId);
 		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
-		if (postId != comment.getPost().getId()) {
+		if (postId != comment.getPost().getPost_id()) {
 			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
 		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
