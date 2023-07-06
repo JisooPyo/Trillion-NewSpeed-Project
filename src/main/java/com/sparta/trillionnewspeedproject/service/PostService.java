@@ -107,12 +107,12 @@ public class PostService {
     }
 
     @Transactional
-    // 선택한 댓글 좋아요 기능 추가
+    // 선택한 게시글 좋아요 기능 추가
     public PostResponseDto postInsertLike(Long postId, User user) {
         Post post = findPost(postId);
-        // 작성자가 좋아요를 시도할 경우 오류 코드 반환
+        // 작성자/관리자가 좋아요를 시도할 경우 오류 코드 반환
         if (checkUser(postId, user)) {
-            throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+            throw new AccessDeniedException("작성자/관리자는 좋아요를 누를 수 없습니다.");
         }
         // 좋아요를 이미 누른 경우 오류 코드 반환
         if (findPostLike(user, post) != null) {
@@ -125,14 +125,14 @@ public class PostService {
         return postResponseDto;
     }
 
-    // 선택한 댓글 좋아요 취소
+    // 선택한 게시글 좋아요 취소
     public PostResponseDto postDeleteLike(Long postId, User user) {
         Post post = findPost(postId);
-        // 작성자가 좋아요를 시도할 경우 오류 코드 반환
+        // 작성자/관리자가 좋아요를 시도할 경우 오류 코드 반환
         if (checkUser(postId, user)) {
-            throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+            throw new AccessDeniedException("작성자/관리자는 좋아요를 누를 수 없습니다.");
         }
-        // 좋아요를 이미 누른 경우 오류 코드 반환
+        // 좋아요를 누른 적이 없는 경우 오류 코드 반환
         if (findPostLike(user, post) == null) {
             throw new NoSuchElementException("좋아요를 누르시지 않았습니다.");
         }
@@ -143,7 +143,7 @@ public class PostService {
         return postResponseDto;
     }
 
-    // 사용자와 댓글에 따른 좋아요 찾기
+    // 사용자와 게시글에 따른 좋아요 찾기
     private PostLike findPostLike(User user, Post post) {
         return postLikeRepository.findByUserAndPost(user,post).orElse(null);
     }
@@ -151,7 +151,7 @@ public class PostService {
     // 선택한 게시글의 사용자가 맞는지 혹은 관리자인지 확인하기
     private boolean checkUser(Long selectId, User user) {
         Post post = findPost(selectId);
-        if (post.getUser().getUserId().equals(user.getUserId()) || user.getRole().getAuthority().equals("ADMIN")) {
+        if (post.getUser().getUserId().equals(user.getUserId()) || user.getRole().getAuthority().equals("ROLE_ADMIN")) {
             return true;
         } else {
             return false;

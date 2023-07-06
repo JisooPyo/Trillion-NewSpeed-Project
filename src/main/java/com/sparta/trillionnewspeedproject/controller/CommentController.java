@@ -90,7 +90,7 @@ public class CommentController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
-		// 작성한 유저가 좋아요를 시도할 경우 오류 메시지 반환
+		// 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
 		catch (AccessDeniedException accessDeniedException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -115,7 +115,7 @@ public class CommentController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
-		// 작성한 유저가 좋아요를 시도할 경우 오류 메시지 반환
+		// 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
 		catch (AccessDeniedException accessDeniedException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
