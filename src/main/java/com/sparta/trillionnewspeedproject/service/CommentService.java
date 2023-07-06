@@ -82,9 +82,9 @@ public class CommentService {
 		if (postId != comment.getPost().getPost_id()) {
 			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
-		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		// 작성자/관리자가 좋아요를 시도할 경우 오류 코드 반환
 		if (checkUser(commentId, user)) {
-			throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+			throw new AccessDeniedException("작성자/관리자는 좋아요를 누를 수 없습니다.");
 		}
 		// 좋아요를 이미 누른 경우 오류 코드 반환
 		if (findCommentLike(user, comment) != null) {
@@ -104,9 +104,9 @@ public class CommentService {
 		if (postId != comment.getPost().getPost_id()) {
 			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
-		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		// 작성자/관리자가 좋아요를 시도할 경우 오류 코드 반환
 		if (checkUser(commentId, user)) {
-			throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+			throw new AccessDeniedException("작성자/관리자는 좋아요를 누를 수 없습니다.");
 		}
 		// 좋아요를 누른 적이 없는 경우 오류 코드 반환
 		if (findCommentLike(user, comment) == null) {
@@ -141,7 +141,7 @@ public class CommentService {
 	// 선택한 댓글의 사용자가 맞는지 혹은 관리자인지 확인하기
 	private boolean checkUser(Long selectId, User user) {
 		Comment comment = findComment(selectId);
-		if (comment.getUser().getUserId().equals(user.getUserId()) || user.getRole().getAuthority().equals("ADMIN")) {
+		if (comment.getUser().getUserId().equals(user.getUserId()) || user.getRole().getAuthority().equals("ROLE_ADMIN")) {
 			return true;
 		} else {
 			return false;
