@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Sign Up</title>
     <link href="/css/signup.css" rel="stylesheet" />
   </head>
@@ -22,16 +23,24 @@
               type="text"
               class="input"
               id="name"
+              name="username"
               placeholder="이름 입력"
             />
             <p class="item">ID</p>
-            <input type="text" class="input" id="id" placeholder="ID 입력" />
+            <input
+              type="text"
+              class="input"
+              id="id"
+              name="userId"
+              placeholder="ID 입력"
+            />
             <button class="btn">ID 중복 확인</button>
             <p class="item">비밀번호</p>
             <input
               type="password"
               class="input"
               id="password"
+              name="password"
               placeholder="비밀번호 입력"
             />
             <button class="btn" onclick="showPassword()">
@@ -75,22 +84,24 @@
                 ></path>
               </svg>
             </button>
-            <p>비밀번호 일치 확인 문구</p>
+            <p id="compare-password"></p>
             <p class="item">이메일</p>
             <input
               type="text"
               class="input"
               id="email"
               placeholder="이메일 입력"
+              name="email"
               required
             />
-            <button class="btn">Email 인증</button>
+            <button class="btn" id="email-check-button">Email 인증</button>
             <p class="item">이메일 인증 번호 입력</p>
             <input
               type="number"
               class="input"
               id="email-number"
               placeholder="이메일 인증번호 입력"
+              name="introduce"
               required
             />
             <button class="btn">인증 번호 확인</button>
