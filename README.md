@@ -144,27 +144,24 @@
 <details>
 <summary>상세보기</summary>
 
-  #### 회원가입 화면
-  ![01회원가입](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/dbeaf76c-fc4d-4454-bdfc-2d083641b582)
+  #### 회원가입 화면 / 로그인 화면
+  <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/bdcd7ece-253a-4c21-8cd3-f37fd8a8d9ec" alt="01회원가입" width="49%" height="49%"> <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/b268bf59-dccc-4fea-ad5a-da6da2fa5f53" alt="02로그인" width="49%" height="49%">
+
+  <br/>
+
+  #### 프로필 페이지(수정, 저장, 자기가 쓴 글 목록 조회 가능) / 뉴스피드 화면(홈 화면) - 전체 글 조회 가능
+  <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/5d764c3a-b067-46f1-b3b6-01bf486921f8" alt="03프로필" width="49%" height="49%"> <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/49c9eafb-8f60-4d33-b30e-b40fa9e74cb6" alt="04뉴스피드홈" width="49%" height="49%">
+    
+  <br/>
   
-  #### 로그인 화면
-  ![02로그인](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/2e08c32e-85e4-452a-8e94-255b1a8f9b76)
-  
-  #### 프로필 페이지(수정, 저장, 자기가 쓴 글 목록 조회 가능)
-  ![03프로필페이지](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/ae8a2a0d-1b20-4ab5-8c19-74b0d9a5d558)
-  
-  #### 뉴스피드 화면(홈 화면) - 전체 글 조회 가능
-  ![04뉴스피드 홈화면](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/6f0b952f-82c5-4b7f-be97-4abac10fb634)
-  
-  #### 포스트 글 조회화면
-  ![05포스트글 조회화면](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/ad92733d-9ca1-49b3-84bc-4c43531274f9)
-  
-  #### 포스트 글 작성화면
-  ![06포스트글작성](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/23e9ba9f-3e9b-4abe-b0f7-935cf259d168)
+  #### 포스트 글 조회화면 / 포스트 글 작성화면
+  <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/fb83e084-1410-49ad-a3b7-e006134e3d57" alt="05포스트조회" width="49%" height="49%"> <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/a95744a5-e936-494b-b0f9-146b81d66c70" alt="06포스트작성" width="49%" height="49%">
+ 
+  <br/>
   
   #### 포스트 글 수정화면
-  ![07포스트글수정](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/dc7fe9a4-64ca-45b3-aa10-66d8cf74f7cd)
-
+  <img src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/39aa2b73-28a0-4530-ad65-90c95b2cabab" alt="07포스트수정" width="49%" height="49%"> 
+  
   <br/><br/>
   <br/>
   <br/>
