@@ -6,7 +6,6 @@ import com.sparta.trillionnewspeedproject.dto.PostRequestDto;
 import com.sparta.trillionnewspeedproject.dto.PostResponseDto;
 import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
 import com.sparta.trillionnewspeedproject.service.PostService;
-import com.sparta.trillionnewspeedproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
