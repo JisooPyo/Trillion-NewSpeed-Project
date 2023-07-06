@@ -126,9 +126,9 @@ public class UserController {
     //입력한 이메일정보를 받아 인증번호를 발급
     @PostMapping("/user/signup/authentication")
     @ResponseBody
-    public ResponseEntity<ApiResponseDto> Authentication(@RequestBody AuthenticationRequestDto requestDto, HttpServletResponse response){
+    public ResponseEntity<ApiResponseDto> authentication(@RequestBody AuthenticationRequestDto requestDto, HttpServletResponse response){
         try {
-            return ResponseEntity.status(200).body(userService.Authentication(requestDto, response));
+            return ResponseEntity.status(200).body(userService.authentication(requestDto, response));
         }
         catch (IllegalArgumentException ex) {
             response.setStatus(400);
@@ -138,9 +138,9 @@ public class UserController {
     // 입력한 이메일과 인증번호를 받아 DB 내 인증번호와 대조 및 만료여부 검증
     @PostMapping("/user/signup/verification")
     @ResponseBody
-    public ResponseEntity<ApiResponseDto> Verification(@RequestBody VerificationRequestDto requestDto, HttpServletResponse response){
+    public ResponseEntity<ApiResponseDto> verification(@RequestBody VerificationRequestDto requestDto, HttpServletResponse response){
         try {
-            return ResponseEntity.status(200).body(userService.Verification(requestDto, response));
+            return ResponseEntity.status(200).body(userService.verification(requestDto, response));
         }
         catch (IllegalArgumentException ex) {
             response.setStatus(400);
