@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.RejectedExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,8 +33,15 @@ public class CommentController {
 	// 댓글 작성
 	@PostMapping("/{postId}/comments")
 	public ResponseEntity<ApiResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		CommentResponseDto responseDto = commentService.createComment(postId, requestDto, userDetails.getUser());
-		return ResponseEntity.ok().body(responseDto);
+		try {
+			CommentResponseDto responseDto = commentService.createComment(postId, requestDto, userDetails.getUser());
+			return ResponseEntity.ok().body(responseDto);
+		}
+		// postId가 존재하지 않을 때 오류 메시지 반환
+		catch (EntityNotFoundException notFoundException) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
+		}
 	}
 
 	// 선택한 댓글 수정
@@ -51,9 +58,9 @@ public class CommentController {
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
 		// 다른 유저가 수정을 시도할 경우 오류 메시지 반환
-		catch (AccessDeniedException accessDeniedException) {
+		catch (RejectedExecutionException rejectedExecutionException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+					.body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
 		}
 	}
 
@@ -71,9 +78,9 @@ public class CommentController {
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
 		// 다른 유저가 삭제를 시도할 경우 오류 메시지 반환
-		catch (AccessDeniedException accessDeniedException) {
+		catch (RejectedExecutionException rejectedExecutionException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+					.body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
 		}
 	}
 
@@ -91,9 +98,9 @@ public class CommentController {
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
 		// 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
-		catch (AccessDeniedException accessDeniedException) {
+		catch (RejectedExecutionException rejectedExecutionException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+					.body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
 		}
 		// 사용자가 이미 좋아요를 누른 경우 오류 메시지 반환
 		catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -116,9 +123,9 @@ public class CommentController {
 					.body(new ApiResponseDto(notFoundException.getMessage(), HttpStatus.NOT_FOUND.value()));
 		}
 		// 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
-		catch (AccessDeniedException accessDeniedException) {
+		catch (RejectedExecutionException rejectedExecutionException) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+					.body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
 		}
 		// 사용자가 좋아요를 누른 적이 없는 경우 오류 메시지 반환
 		catch (NoSuchElementException noSuchElementException) {

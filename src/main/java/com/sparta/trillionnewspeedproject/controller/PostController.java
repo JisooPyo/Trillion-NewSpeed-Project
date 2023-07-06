@@ -6,12 +6,10 @@ import com.sparta.trillionnewspeedproject.dto.PostRequestDto;
 import com.sparta.trillionnewspeedproject.dto.PostResponseDto;
 import com.sparta.trillionnewspeedproject.security.UserDetailsImpl;
 import com.sparta.trillionnewspeedproject.service.PostService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,9 +88,9 @@ public class PostController {
                     .body(new ApiResponseDto(illegalArgumentException.getMessage(), HttpStatus.NOT_FOUND.value()));
         }
         // 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
-        catch (AccessDeniedException accessDeniedException) {
+        catch (RejectedExecutionException rejectedExecutionException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+                    .body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
         // 사용자가 이미 좋아요를 누른 경우 오류 메시지 반환
         catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -115,9 +113,9 @@ public class PostController {
                     .body(new ApiResponseDto(illegalArgumentException.getMessage(), HttpStatus.NOT_FOUND.value()));
         }
         // 작성한 유저/관리자가 좋아요를 시도할 경우 오류 메시지 반환
-        catch (AccessDeniedException accessDeniedException) {
+        catch (RejectedExecutionException rejectedExecutionException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseDto(accessDeniedException.getMessage(), HttpStatus.BAD_REQUEST.value()));
+                    .body(new ApiResponseDto(rejectedExecutionException.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
         // 사용자가 좋아요를 누른 적이 없는 경우 오류 메시지 반환
         catch (NoSuchElementException noSuchElementException) {
