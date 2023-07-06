@@ -1,4 +1,5 @@
-# 🏋️ Trillion "Exercise Blog Project"
+# 🏋️ Trillion-NewSpeed-Project
+##### 운동 관련 정보를 작성하는 블로그 만들기!
 
 ## 기술 스택
 
