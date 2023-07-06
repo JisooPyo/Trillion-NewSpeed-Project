@@ -3,6 +3,11 @@ body {
   background-color: #f3f3f3;
 }
 
+#find-id-screen,
+#find-pw-screen {
+  display: none;
+}
+
 .container {
   max-width: 400px;
   margin: 100px auto;

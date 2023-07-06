@@ -30,7 +30,7 @@ function signupPage() {
 }
 
 function myProfilePage() {
-  window.location.href = "/api/user";
+  window.location.href = "profile.html";
 }
 
 function writeNewPost() {

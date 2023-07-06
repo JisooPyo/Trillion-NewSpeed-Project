@@ -36,7 +36,7 @@ public class UserController {
         return "signup";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/profile-page")
     public String myProfilePage() {return "profile";}
 
 
