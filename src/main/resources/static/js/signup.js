@@ -38,7 +38,7 @@ function showCheckPassword() {
 }
 
 function home() {
-  window.location.href = "../templates/newspeed.html";
+  window.location.href = "/";
 }
 
 var password1 = document.getElementById("password");
@@ -82,14 +82,10 @@ $(document).ready(function () {
   $("#email-num-check-button").click(function () {
     var email = $("#email").val(); // 입력된 이메일 가져오기
     var num = $("#email-number").val(); // 입력된 번호 가져오기
-    console.log(email);
-    console.log(num);
-
     var data = {
       email: email,
-      authKey: num
+      authKey: num,
     };
-    console.log(data);
     //AJAX를 통해 POST 요청 보내기
     $.ajax({
       url: "/api/user/signup/verification",
@@ -97,20 +93,48 @@ $(document).ready(function () {
       data: JSON.stringify(data),
       contentType: "application/json",
       success: function (response) {
-        console.log("인증번호 확인!");
-        var statusCode = response.code;
-        var message = response.data;
+        console.log("이메일 인증 성공!");
+        var responseMessage = response.msg;
+        var responseCode = response.statusCode;
 
-        $("#status-code").text("Status Code: " + statusCode);
-        $("#message").text("Message: " + message);
+        $("#response-code").text("Response Code: " + responseCode);
+        $("#response-message").text("Response Message: " + responseMessage);
       },
-      error: function (response) {
-        console.log("인증 실패");
-        var statusCode = response.code;
-        var msg = response.data;
+      error: function (xhr, status, error) {
+        console.error("Error: " + error);
+      },
+    });
+  });
 
-        console.log(statusCode);
-        console.log(msg);
+  $("#sign-up-button").click(function () {
+    var userId = $("#id").val();
+    var username = $("#name").val();
+    var password = $("#password").val();
+    var email = $("#email").val();
+    var introduce = $("#introduce").val();
+
+    var data = {
+      userId: userId,
+      username: username,
+      password: password,
+      email: email,
+      introduce: introduce,
+    };
+
+    $.ajax({
+      url: "/api/user/signup",
+      type: "POST",
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      success: function (response) {
+        console.log("회원가입 성공!");
+        var responseMessage = response.msg;
+        var responseCode = response.statusCode;
+        alert(responseCode + " : " + responseMessage);
+        window.location.href = "/";
+      },
+      error: function (xhr, status, error) {
+        console.error("Error: " + error);
       },
     });
   });
