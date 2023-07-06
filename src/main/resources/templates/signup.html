@@ -97,15 +97,18 @@
             <button class="btn" id="email-check-button">Email 인증</button>
             <p class="item">이메일 인증 번호 입력</p>
             <input
-              type="number"
+              type="text"
               class="input"
               id="email-number"
               placeholder="이메일 인증번호 입력"
               name="introduce"
               required
             />
-            <button class="btn">인증 번호 확인</button>
-            <p>인증 완료 문구</p>
+            <button class="btn" id="email-num-check-button">
+              인증 번호 확인
+            </button>
+            <p id="email-status-code"></p>
+            <p id="email-message"></p>
             <p class="item">본인 소개</p>
             <textarea
               type="text"

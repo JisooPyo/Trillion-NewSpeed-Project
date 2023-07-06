@@ -69,6 +69,49 @@ $(document).ready(function () {
       type: "POST",
       data: JSON.stringify({ email: email }), // 요청 데이터 설정
       contentType: "application/json", // 요청의 컨텐츠 타입 설정
+      success: function () {
+        alert("이메일 인증번호를 발급하였습니다! 인증번호를 확인해주세요!");
+        console.log("이메일 인증번호 발급 성공");
+      },
+      error: function (xhr, status, error) {
+        console.error("오류가 발생했습니다:", error);
+      },
+    });
+  });
+
+  $("#email-num-check-button").click(function () {
+    var email = $("#email").val(); // 입력된 이메일 가져오기
+    var num = $("#email-number").val(); // 입력된 번호 가져오기
+    console.log(email);
+    console.log(num);
+
+    var data = {
+      email: email,
+      authKey: num
+    };
+    console.log(data);
+    //AJAX를 통해 POST 요청 보내기
+    $.ajax({
+      url: "/api/user/signup/verification",
+      type: "POST",
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      success: function (response) {
+        console.log("인증번호 확인!");
+        var statusCode = response.code;
+        var message = response.data;
+
+        $("#status-code").text("Status Code: " + statusCode);
+        $("#message").text("Message: " + message);
+      },
+      error: function (response) {
+        console.log("인증 실패");
+        var statusCode = response.code;
+        var msg = response.data;
+
+        console.log(statusCode);
+        console.log(msg);
+      },
     });
   });
 });
