@@ -36,6 +36,9 @@ public class UserController {
         return "signup";
     }
 
+    @GetMapping("/user")
+    public String myProfilePage() {return "profile";}
+
 
     @PostMapping("/user/signup")
     @ResponseBody

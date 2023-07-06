@@ -23,6 +23,11 @@ public class PostController {
 
     private final PostService postService;
 
+    // get 요청에 대해 새 글쓰기 html 전달
+    @GetMapping("/newPost")
+    public String writeNewPost() {
+        return "post";
+    }
 
     // 게시글 작성
     @PostMapping("/posts")
