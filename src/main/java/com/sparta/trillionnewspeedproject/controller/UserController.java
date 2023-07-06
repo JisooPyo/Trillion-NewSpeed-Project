@@ -138,7 +138,7 @@ public class UserController {
     // 입력한 이메일과 인증번호를 받아 DB 내 인증번호와 대조 및 만료여부 검증
     @PostMapping("/user/signup/verification")
     @ResponseBody
-    public ResponseEntity<ApiResponseDto> aerification(@RequestBody VerificationRequestDto requestDto, HttpServletResponse response){
+    public ResponseEntity<ApiResponseDto> verification(@RequestBody VerificationRequestDto requestDto, HttpServletResponse response){
         try {
             return ResponseEntity.status(200).body(userService.verification(requestDto, response));
         }
