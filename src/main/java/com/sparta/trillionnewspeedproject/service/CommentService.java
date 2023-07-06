@@ -9,13 +9,16 @@ import com.sparta.trillionnewspeedproject.entity.User;
 import com.sparta.trillionnewspeedproject.repository.CommentLikeRepository;
 import com.sparta.trillionnewspeedproject.repository.CommentRepository;
 import com.sparta.trillionnewspeedproject.repository.PostRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -41,103 +44,85 @@ public class CommentService {
 
 	// 선택한 댓글 수정
 	@Transactional
-	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user, HttpServletResponse response) {
-
-		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
+	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
 		if (postId != findComment(commentId).getPost().getPost_id()) {
-			response.setStatus(404);
-			return null;
-
-		// 다른 유저가 수정을 시도할 경우 오류 코드 반환
-		} else if (!checkUser(commentId, user)) {
-			response.setStatus(400);
-			return null;
-
-		// 오류가 나지 않을 경우 해당 댓글 수정
-		} else {
-			findComment(commentId).update(requestDto);
-			CommentResponseDto commentResponseDto = new CommentResponseDto(findComment(commentId));
-			return commentResponseDto;
+			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
+		// 다른 유저가 수정을 시도할 경우 예외 처리
+		if (!checkUser(commentId, user)) {
+			throw new AccessDeniedException("작성자만 수정할 수 있습니다.");
+		}
+		// 오류가 나지 않을 경우 해당 댓글 수정
+		findComment(commentId).update(requestDto);
+		CommentResponseDto commentResponseDto = new CommentResponseDto(findComment(commentId));
+		return commentResponseDto;
+
 	}
 
 	// 선택한 댓글 삭제
-	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user, HttpServletResponse response) {
-
-		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != findComment(commentId).getPost().getPost_id()) {
-			response.setStatus(404);
-
-		// 다른 유저가 삭제를 시도할 경우 오류 코드 반환
-		} else if (!checkUser(commentId, user)) {
-			response.setStatus(400);
-
-		// 오류가 나지 않을 경우 해당 댓글 삭제
-		} else {
-			commentRepository.delete(findComment(commentId));
+	public void deleteComment(Long postId, Long commentId, @AuthenticationPrincipal User user) {
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
+		if (postId != findComment(commentId).getPost().getId()) {
+			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
+		// 다른 유저가 삭제를 시도할 경우 예외 처리
+		if (!checkUser(commentId, user)) {
+			throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
+		}
+		// 오류가 나지 않을 경우 해당 댓글 삭제
+		commentRepository.delete(findComment(commentId));
 	}
 
 	@Transactional
 	// 선택한 댓글 좋아요 기능 추가
-	public CommentResponseDto commentInsertLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+	public CommentResponseDto commentInsertLike(Long postId, Long commentId, User user) {
 		Comment comment = findComment(commentId);
-
-		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != comment.getPost().getPost_id()) {
-			response.setStatus(404);
-			return null;
-
-		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
-		} else if (checkUser(commentId, user)) {
-			response.setStatus(400);
-			return null;
-
-		// 좋아요를 이미 누른 경우 오류 코드 반환
-		} else if (findCommentLike(user, comment) != null) {
-			response.setStatus(409);
-			return null;
-
-		// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
-		} else {
-			commentLikeRepository.save(new CommentLike(user, comment));
-			comment.insertLikeCnt();
-			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
-			return commentResponseDto;
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
+		if (postId != comment.getPost().getId()) {
+			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		if (checkUser(commentId, user)) {
+			throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+		}
+		// 좋아요를 이미 누른 경우 오류 코드 반환
+		if (findCommentLike(user, comment) != null) {
+			throw new DataIntegrityViolationException("좋아요를 이미 누르셨습니다.");
+		}
+		// 오류가 나지 않을 경우 해당 댓글 좋아요 추가
+		commentLikeRepository.save(new CommentLike(user, comment));
+		comment.insertLikeCnt();
+		CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
+		return commentResponseDto;
 	}
 
-	public CommentResponseDto commentDeleteLike(Long postId, Long commentId, User user, HttpServletResponse response) {
+	// 선택한 댓글 좋아요 취소
+	public CommentResponseDto commentDeleteLike(Long postId, Long commentId, User user) {
 		Comment comment = findComment(commentId);
-
-		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 오류 코드 반환
-		if (postId != comment.getPost().getPost_id()) {
-			response.setStatus(404);
-			return null;
-
-		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
-		} else if (checkUser(commentId, user)) {
-			response.setStatus(400);
-			return null;
-
-		// 좋아요를 누른 적이 없는 경우 오류 코드 반환
-		} else if (findCommentLike(user, comment) == null) {
-			response.setStatus(409);
-			return null;
-
-		// 오류가 나지 않을 경우 해당 댓글 좋아요 취소
-		} else {
-			commentLikeRepository.delete(findCommentLike(user, comment));
-			comment.deleteLikeCnt();
-			CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
-			return commentResponseDto;
+		// postId 받은 것과 comment DB에 저장된 postId가 다를 경우 예외 처리
+		if (postId != comment.getPost().getId()) {
+			throw new EntityNotFoundException("해당 페이지를 찾을 수 없습니다.");
 		}
+		// 작성자가 좋아요를 시도할 경우 오류 코드 반환
+		if (checkUser(commentId, user)) {
+			throw new AccessDeniedException("작성자는 좋아요를 누를 수 없습니다.");
+		}
+		// 좋아요를 누른 적이 없는 경우 오류 코드 반환
+		if (findCommentLike(user, comment) == null) {
+			throw new NoSuchElementException("좋아요를 누르시지 않았습니다.");
+		}
+		commentLikeRepository.delete(findCommentLike(user, comment));
+		comment.deleteLikeCnt();
+		CommentResponseDto commentResponseDto = new CommentResponseDto(commentRepository.save(comment));
+		return commentResponseDto;
 	}
 
 	// id에 따른 댓글 찾기
 	private Comment findComment(Long commentId) {
 		return commentRepository.findById(commentId).orElseThrow(() ->
-				new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
+				// 댓글이 존재하지 않을 경우 예외 처리
+				new EntityNotFoundException("선택한 댓글은 존재하지 않습니다.")
 		);
 	}
 
@@ -149,7 +134,7 @@ public class CommentService {
 	// id에 따른 게시글 찾기
 	private Post findPost(Long postId) {
 		return postRepository.findById(postId).orElseThrow(() ->
-				new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
+				new EntityNotFoundException("선택한 게시글은 존재하지 않습니다.")
 		);
 	}
 
