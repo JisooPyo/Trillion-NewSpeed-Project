@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/").permitAll() // 기본 페이지 요청 허가
                         .requestMatchers("/api/user/signup").permitAll() // '/api/user/signup' 요청은 모든 사용자에게 허용
+                        .requestMatchers("/api/user/signup/**").permitAll() //'/api/user/signup/'로 시작하는 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login").permitAll() // '/api/user/login' 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login-page").permitAll()
                         .requestMatchers("/api/user/findid").permitAll() //아이디 찾기, 비밀번호 찾기 요청 모든 사용자에게 허용
