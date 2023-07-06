@@ -77,6 +77,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/signup").permitAll() // '/api/user/signup' 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login").permitAll() // '/api/user/login' 요청은 모든 사용자에게 허용
                         .requestMatchers("/api/user/login-page").permitAll()
+                        .requestMatchers("/api/user/findid").permitAll() //아이디 찾기, 비밀번호 찾기 요청 모든 사용자에게 허용
+                        .requestMatchers("/api/user/findpw").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

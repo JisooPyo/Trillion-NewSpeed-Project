@@ -181,18 +181,4 @@ public class UserService {
         }
         return str;
     }
-
-    //회원가입 시, 이메일
-//    public ResponseMessageDto emailConfirm(EmailConfirmRequestDto requestDto, HttpServletResponse response) {
-//        String email = requestDto.getEmail();
-//        // email 중복확인
-//        Optional<User> checkEmail = userRepository.findByEmail(email);
-//
-//        //이미 가입된 이메일이 존재하는 경우 - 에러메시지 전달
-//        if (checkEmail.isPresent()) {
-//            response.setStatus(400);
-//            return globalExceptionHandler.badRequestException(ErrorCode.EMAIL_EXIST_ERROR);
-//        }
-//
-//    }
 }
