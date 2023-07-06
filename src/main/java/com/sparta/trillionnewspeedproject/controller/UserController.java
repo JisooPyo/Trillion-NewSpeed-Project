@@ -122,4 +122,29 @@ public class UserController {
             return ResponseEntity.status(400).body(new ApiResponseDto(ex.getMessage(), response.getStatus()));
         }
     }
+
+    //입력한 이메일정보를 받아 인증번호를 발급
+    @PostMapping("/user/signup/authentication")
+    @ResponseBody
+    public ResponseEntity<ApiResponseDto> Authentication(@RequestBody AuthenticationRequestDto requestDto, HttpServletResponse response){
+        try {
+            return ResponseEntity.status(200).body(userService.Authentication(requestDto, response));
+        }
+        catch (IllegalArgumentException ex) {
+            response.setStatus(400);
+            return ResponseEntity.status(400).body(new ApiResponseDto(ex.getMessage(), response.getStatus()));
+        }
+    }
+    // 입력한 이메일과 인증번호를 받아 DB 내 인증번호와 대조 및 만료여부 검증
+    @PostMapping("/user/signup/verification")
+    @ResponseBody
+    public ResponseEntity<ApiResponseDto> Verification(@RequestBody VerificationRequestDto requestDto, HttpServletResponse response){
+        try {
+            return ResponseEntity.status(200).body(userService.Verification(requestDto, response));
+        }
+        catch (IllegalArgumentException ex) {
+            response.setStatus(400);
+            return ResponseEntity.status(400).body(new ApiResponseDto(ex.getMessage(), response.getStatus()));
+        }
+    }
 }
