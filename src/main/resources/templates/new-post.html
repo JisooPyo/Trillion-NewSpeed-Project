@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>포스트 작성</title>
+    <link href="/css/new-post.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header>
+      <h1 class="logo" onclick="home()">Trillion</h1>
+      <button id="profile-image" onclick="myProfilePage()"></button>
+    </header>
+
+    <main>
+      <div class="section1">
+        <h1>글 작성하기</h1>
+      </div>
+      <div class="content-wrapper">
+        <input
+          type="text"
+          name="post-title"
+          id="post-title"
+          placeholder="제목 입력"
+        />
+        <textarea
+          name="post-content"
+          id="post-content"
+          placeholder="내용 입력"
+        ></textarea
+        ><br />
+        <!--  -->
+        <div id="tag-input-wrapper">
+          <input type="text" id="tagInput" />
+          <button id="tag-input-button" onclick="addTag()">태그 추가</button>
+        </div>
+        <div id="tagContainer"></div>
+        <!-- input type="hidden" -->
+        <input type="hidden" name="tags" id="tagsInput" />
+        <!--  -->
+        <div id="complete-wrapper">
+          <button id="complete">글 작성 완료</button>
+        </div>
+      </div>
+      <div class="footer"></div>
+    </main>
+    <button id="topButton">Top</button>
+
+    <script src="/js/new-post.js"></script>
+  </body>
+</html>

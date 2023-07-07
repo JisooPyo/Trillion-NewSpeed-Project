@@ -36,7 +36,6 @@ public class UserController {
         return "signup";
     }
 
-
     @PostMapping("/user/signup")
     @ResponseBody
     public ResponseEntity<ApiResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult, HttpServletResponse response) {

@@ -1,0 +1,217 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+header {
+  background-color: white;
+  color: #000;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  line-height: 0px;
+}
+
+header .logo {
+  margin: 28px 0px 0px 0px;
+  align-self: flex-start;
+}
+
+header .header-right {
+  align-self: flex-end;
+  display: flex;
+}
+
+header .login-button,
+header .signup-button,
+header #my-profile,
+header #write-new-post {
+  background-color: #0878d0;
+  color: #fff;
+  margin-top: 10px;
+  border: none;
+  padding: 6px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  background-color: #efefef;
+}
+
+.section1 {
+  display: flex;
+  flex-direction: row;
+  background-color: #2b2b2b;
+  padding: 0px 0px 0px 30px;
+  color: #fff;
+  height: 250px;
+}
+
+.section1 h1 {
+  margin-top: 0;
+  line-height: 1.5;
+  font-size: 32px;
+}
+
+.section1 p {
+  margin: 0;
+}
+
+.section1-l {
+  /* background-color: yellow; */
+  margin: auto 0px auto 0px;
+  width: 50%;
+}
+
+.section1-r {
+  width: 50%;
+  background-image: url("https://github.com/JisooPyo/Java-Study/assets/130378232/5754b5c5-56ff-41c9-b540-f45a78e2d7c9");
+  background-size: cover;
+}
+
+.left-section {
+  /* background-color: #a7fff8; */
+  margin: 20px 0px 20px 50px;
+  width: 75%;
+}
+
+.post {
+  margin-bottom: 20px;
+  /* padding: 20px; */
+  background-color: white;
+  padding: 20px 20px 10px 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.thumbnail {
+  width: 200px;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  background-color: pink;
+}
+
+.author {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.author-profile {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: green;
+  background-size: cover;
+  background-position: center;
+  margin-right: 10px;
+}
+
+.author-name {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+.right-section {
+  background-color: white;
+  padding: 20px;
+  width: 20%;
+  margin: 20px 50px 20px 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.right-section h3 {
+  margin-top: 0;
+}
+
+.tag-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-list li {
+  display: inline-block;
+  color: #055da3;
+  background-color: #f2f2f2;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  /* border-radius: 3px; */
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  background-color: #efefef;
+}
+
+.content-wrapper2 {
+  display: flex;
+  flex-direction: row;
+  /* background-color: rgb(248, 255, 182); */
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid rgb(229, 229, 229);
+  height: 200px;
+}
+
+.post-content {
+  margin-left: 20px;
+  line-height: 5px;
+}
+.content {
+  line-height: normal;
+}
+
+.post-footer {
+  /* background-color: grey; */
+  display: flex;
+  align-items: center;
+}
+
+.like-count {
+  margin-right: 5px;
+}
+
+.comment-count {
+  margin-right: 5px;
+  margin-left: 10px;
+}
+
+#topButton {
+  display: none;
+  /* 일단 페이지 상단으로 이동하기 전까지 숨김 처리 */
+  position: fixed;
+  /* 페이지 스크롤과 함께 고정되도록 설정 */
+  bottom: 20px;
+  /* 원하는 위치로 조정 */
+  right: 20px;
+  /* 원하는 위치로 조정 */
+  z-index: 99;
+  /* 다른 요소들 위에 보이도록 설정 */
+  font-size: 16px;
+  /* 필요에 따라 버튼 크기 조정 */
+  border: none;
+  /* 필요에 따라 버튼 스타일 조정 */
+  background-color: #555;
+  /* 필요에 따라 버튼 스타일 조정 */
+  color: white;
+  /* 필요에 따라 버튼 스타일 조정 */
+  cursor: pointer;
+  /* 마우스 호버 시 커서 모양 변경 */
+  padding: 10px 15px;
+  /* 필요에 따라 버튼 크기 조정 */
+  border-radius: 4px;
+  /* 필요에 따라 버튼 모양 조정 */
+}

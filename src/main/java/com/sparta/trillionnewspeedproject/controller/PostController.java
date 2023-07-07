@@ -23,7 +23,6 @@ public class PostController {
 
     private final PostService postService;
 
-
     // 게시글 작성
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDto> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostRequestDto requestDto) {

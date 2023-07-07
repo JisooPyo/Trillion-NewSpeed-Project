@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="/css/index.css" rel="stylesheet" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <title>Trillion Blog</title>
+  </head>
+
+  <body>
+    <header>
+      <h1 class="logo">Trillion</h1>
+      <div class="header-right">
+        <button class="login-button" onclick="loginPage()">Login</button>
+        <button class="signup-button" onclick="signupPage()">Sign Up</button>
+        <button id="my-profile">My Profile</button>
+        <button id="write-new-post" onclick="writeNewPost()">New Post</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="section1">
+        <div class="section1-l">
+          <h1>Trillion Exercise Blog Project</h1>
+          <p>운동에 관한 글을 쓰고, 정보를 얻는 블로그입니다!</p>
+        </div>
+        <div class="section1-r"></div>
+      </div>
+      <div class="content-wrapper">
+        <div class="left-section" id="post-list">
+          <div class="post">
+            <div class="content-wrapper2">
+              <div
+                class="thumbnail"
+                style="
+                  background-image: url(https://github.com/JisooPyo/My-Study/assets/130378232/bbde6c0d-f306-4301-9fb6-2d46fa156e57);
+                "
+              >
+                thumbnail
+              </div>
+              <div class="post-content">
+                <h3 class="post-title" style="color: #055da3">
+                  Blog Post Title 1
+                </h3>
+                <p class="post-date">June 30, 2023</p>
+                <div class="author">
+                  <div
+                    class="author-profile"
+                    style="
+                      background-image: url(https://example.com/author-profile-image.jpg);
+                    "
+                  ></div>
+                  <h3 class="author-name" style="color: #055da3">John Doe</h3>
+                </div>
+                <div class="content">포스트 1의 내용이 여기 들어갑니다.</div>
+              </div>
+            </div>
+            <div class="post-footer">
+              <span class="comment-count" style="color: #055da3"
+                >comments 10 |</span
+              >
+              <span class="like-count" style="color: #055da3">likes 50 |</span>
+              <ul class="tag-list">
+                <li class="tag">Tag 1</li>
+                <li class="tag">Tag 2</li>
+                <li class="tag">Tag 3</li>
+              </ul>
+            </div>
+          </div>
+          <div class="post">
+            <div class="content-wrapper2">
+              <div
+                class="thumbnail"
+                style="
+                  background-image: url(https://github.com/JisooPyo/My-Study/assets/130378232/bbde6c0d-f306-4301-9fb6-2d46fa156e57);
+                "
+              >
+                thumbnail
+              </div>
+              <div class="post-content">
+                <h3 class="post-title" style="color: #055da3">
+                  Blog Post Title 1
+                </h3>
+                <p class="post-date">June 30, 2023</p>
+                <div class="author">
+                  <div
+                    class="author-profile"
+                    style="
+                      background-image: url(https://example.com/author-profile-image.jpg);
+                    "
+                  ></div>
+                  <h3 class="author-name" style="color: #055da3">John Doe</h3>
+                </div>
+                <div class="content">포스트 1의 내용이 여기 들어갑니다.</div>
+              </div>
+            </div>
+            <div class="post-footer">
+              <span class="comment-count" style="color: #055da3"
+                >comments 10 |</span
+              >
+              <span class="like-count" style="color: #055da3">likes 50 |</span>
+              <ul class="tag-list">
+                <li class="tag">Tag 1</li>
+                <li class="tag">Tag 2</li>
+                <li class="tag">Tag 3</li>
+              </ul>
+            </div>
+          </div>
+          <div class="post">
+            <div class="content-wrapper2">
+              <div
+                class="thumbnail"
+                style="
+                  background-image: url(https://github.com/JisooPyo/My-Study/assets/130378232/bbde6c0d-f306-4301-9fb6-2d46fa156e57);
+                "
+              >
+                thumbnail
+              </div>
+              <div class="post-content">
+                <h3 class="post-title" style="color: #055da3">
+                  Blog Post Title 1
+                </h3>
+                <p class="post-date">June 30, 2023</p>
+                <div class="author">
+                  <div
+                    class="author-profile"
+                    style="
+                      background-image: url(https://example.com/author-profile-image.jpg);
+                    "
+                  ></div>
+                  <h3 class="author-name" style="color: #055da3">John Doe</h3>
+                </div>
+                <div class="content">포스트 1의 내용이 여기 들어갑니다.</div>
+              </div>
+            </div>
+            <div class="post-footer">
+              <span class="comment-count" style="color: #055da3"
+                >comments 10 |</span
+              >
+              <span class="like-count" style="color: #055da3">likes 50 |</span>
+              <ul class="tag-list">
+                <li class="tag">Tag 1</li>
+                <li class="tag">Tag 2</li>
+                <li class="tag">Tag 3</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-section">
+          <h3>Popular Tags</h3>
+          <ul class="tag-list">
+            <li>#상체운동</li>
+            <li>#하체운동</li>
+            <li>#크로스핏</li>
+            <li>#대흉근</li>
+            <li>#광배근</li>
+            <li>#삼각근</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    <button id="topButton">Top</button>
+    <script src="/js/index.js"></script>
+  </body>
+</html>

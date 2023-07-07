@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>포스트 제목</title>
+    <link href="/css/post.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header>
+      <h1 class="logo" onclick="home()">Trillion</h1>
+      <button id="profile-image" onclick="myProfilePage()"></button>
+    </header>
+
+    <main>
+      <div class="section1">
+        <h1 id="section1-post-title">포스트 제목</h1>
+      </div>
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="left">
+            <p class="post-author">작성자 :</p>
+            <p class="post-author" name="username">표지수</p>
+          </div>
+          <div class="right">
+            <button class="post-button" onclick="showPostModifyPage()">
+              글 수정
+            </button>
+            <button class="post-button">글 삭제</button>
+          </div>
+        </div>
+        <div id="post-content">포스트 내용</div>
+        <ul class="tag-list">
+          <li class="tag">Tag 1</li>
+          <li class="tag">Tag 2</li>
+          <li class="tag">Tag 3</li>
+        </ul>
+        <div class="likes-wrapper">
+          <button id="like-btn">좋아요!</button>
+          <p id="like-num">0</p>
+        </div>
+      </div>
+      <!--  -->
+      <div class="post-modifier">
+        <div class="modify-header">
+          <button id="post-modi-complete" onclick="reload()">
+            글 수정 완료!
+          </button>
+        </div>
+        <div>
+          <input type="text" name="post-title-modi" id="post-title-modi" />
+          <textarea name="post-content-modi" id="post-content-modi"></textarea>
+        </div>
+      </div>
+      <!--  -->
+      <div class="comment-input-wrapper">
+        <input
+          type="text"
+          name="input-comment"
+          id="input-comment"
+          placeholder="댓글을 작성하세요"
+        /><br />
+        <div id="btn-wrapper">
+          <button id="comment-complete-btn">댓글 작성</button>
+        </div>
+      </div>
+      <div class="comment-list">
+        <div class="comment">
+          <div class="comment-head">
+            <div class="author-info">
+              <div id="author-profile"></div>
+              <div id="author-id"><p>wltn326</p></div>
+              <p id="item1">작성</p>
+              <div id="created-at"><p>2023-07-06 15:45</p></div>
+              <p id="item1">수정</p>
+              <div id="modified-at"><p>2023-07-06 16:17</p></div>
+            </div>
+            <div class="btn-wrapper">
+              <button id="modify-button" onclick="showCommentInput(this)">
+                수정
+              </button>
+              <button id="delete-button">삭제</button>
+            </div>
+          </div>
+          <div class="comment-like-wrapper">
+            <button id="comment-like-button">좋아요!</button>
+            <p id="comment-like-num">12345</p>
+          </div>
+          <div class="comment-footer">댓글 내용</div>
+          <div class="comment-modify-wrapper">
+            <input
+              id="comment-modify-input"
+              name="comment-modify-input"
+              placeholder="수정할 댓글을 입력하세요"
+            />
+            <div class="cmt-modify-btn-wrapper">
+              <button
+                id="comment-modify-cancel"
+                onclick="hideCommentInput(this)"
+              >
+                수정 취소
+              </button>
+              <button id="comment-modify-complete" onclick="reload()">
+                수정 완료
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="comment-head">
+            <div class="author-info">
+              <div id="author-profile"></div>
+              <div id="author-id"><p>wltn326</p></div>
+              <p id="item1">작성</p>
+              <div id="created-at"><p>2023-07-06 15:45</p></div>
+              <p id="item1">수정</p>
+              <div id="modified-at"><p>2023-07-06 16:17</p></div>
+            </div>
+            <div class="btn-wrapper">
+              <button id="modify-button" onclick="showCommentInput(this)">
+                수정
+              </button>
+              <button id="delete-button">삭제</button>
+            </div>
+          </div>
+          <div class="comment-like-wrapper">
+            <button id="comment-like-button">좋아요!</button>
+            <p id="comment-like-num">12345</p>
+          </div>
+          <div class="comment-footer">댓글 내용</div>
+          <div class="comment-modify-wrapper">
+            <input
+              id="comment-modify-input"
+              name="comment-modify-input"
+              placeholder="수정할 댓글을 입력하세요"
+            />
+            <div class="cmt-modify-btn-wrapper">
+              <button
+                id="comment-modify-cancel"
+                onclick="hideCommentInput(this)"
+              >
+                수정 취소
+              </button>
+              <button id="comment-modify-complete" onclick="reload()">
+                수정 완료
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="comment-head">
+            <div class="author-info">
+              <div id="author-profile"></div>
+              <div id="author-id"><p>wltn326</p></div>
+              <p id="item1">작성</p>
+              <div id="created-at"><p>2023-07-06 15:45</p></div>
+              <p id="item1">수정</p>
+              <div id="modified-at"><p>2023-07-06 16:17</p></div>
+            </div>
+            <div class="btn-wrapper">
+              <button id="modify-button" onclick="showCommentInput(this)">
+                수정
+              </button>
+              <button id="delete-button">삭제</button>
+            </div>
+          </div>
+          <div class="comment-like-wrapper">
+            <button id="comment-like-button">좋아요!</button>
+            <p id="comment-like-num">12345</p>
+          </div>
+          <div class="comment-footer">댓글 내용</div>
+          <div class="comment-modify-wrapper">
+            <input
+              id="comment-modify-input"
+              name="comment-modify-input"
+              placeholder="수정할 댓글을 입력하세요"
+            />
+            <div class="cmt-modify-btn-wrapper">
+              <button
+                id="comment-modify-cancel"
+                onclick="hideCommentInput(this)"
+              >
+                수정 취소
+              </button>
+              <button id="comment-modify-complete" onclick="reload()">
+                수정 완료
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer"></div>
+    </main>
+    <button id="topButton">Top</button>
+
+    <script src="/js/post.js"></script>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+header {
+  background-color: white;
+  color: #000;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 0px;
+}
+
+header .logo {
+  margin: 20px 0px 4px 0px;
+  cursor: pointer;
+}
+
+header #write-new-post {
+  background-color: #0878d0;
+  color: #fff;
+  margin-top: 10px;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 15px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+main {
+  margin-top: 20px;
+  background-color: #efefef;
+}
+
+.section1 {
+  background-color: #2b2b2b;
+  padding: 70px 0px 70px 40px;
+  color: #fff;
+}
+
+.left-section {
+  /* background-color: pink; */
+  width: 33%;
+  margin-left: 17%;
+}
+
+.item {
+  /* background-color: grey; */
+  font-size: 18px;
+  margin: 0px 0px 5px 0px;
+  color: #055da3;
+  font-weight: 600;
+}
+
+.input {
+  font-size: 14px;
+  padding: 7px;
+  margin: 0px 0px 5px 0px;
+  width: 200px;
+}
+
+.btn {
+  font-size: 12px;
+  padding: 2px 5px 2px 5px;
+  /* border: none; */
+  color: #055da3;
+}
+
+#introduce {
+  width: 300px;
+  height: 250px;
+}
+
+.right-section {
+  /* background-color: greenyellow; */
+  width: 33%;
+  margin-right: 17%;
+  align-items: center;
+  /* display: ; */
+}
+
+#profile-image {
+  margin: 20px auto 0px auto;
+  width: 200px;
+  height: 200px;
+  background-color: grey;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#picAddButton {
+  margin: 0px auto 0px auto;
+  padding: 5px 10px 5px 10px;
+  font-size: 15px;
+  width: 150px;
+}
+
+.content-wrapper {
+  background-color: white;
+  padding: 20px;
+  width: 90%;
+  margin: 20px auto 40px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.information {
+  display: flex;
+  flex-direction: row;
+  margin: 0px auto 0px auto;
+}
+
+.content-footer,
+.content-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+#complete-button,
+#profile-modify,
+#profile-modify-cancel {
+  margin: 20px auto 0px auto;
+  font-size: 20px;
+  padding: 5px 10px 5px 10px;
+}
+
+#bookmark-button,
+#my-post-button {
+  margin: 20px 0px 0px 75%;
+  font-size: 20px;
+  padding: 5px 10px 5px 10px;
+}
+
+.footer {
+  margin: 0px;
+  height: 40px;
+  background-color: #efefef;
+}
+
+.my-post-list-title {
+  background-color: #efefef;
+  text-align: center;
+  padding: 20px 0px 20px 0px;
+  margin-bottom: 20px;
+}
+
+.post {
+  margin-bottom: 20px;
+  /* padding: 20px; */
+  background-color: white;
+  padding: 20px 20px 10px 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.content-wrapper2 {
+  display: flex;
+  flex-direction: row;
+  /* background-color: rgb(248, 255, 182); */
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid rgb(229, 229, 229);
+  height: 200px;
+}
+
+.thumbnail {
+  width: 200px;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+}
+
+.post-content {
+  margin-left: 20px;
+  line-height: 5px;
+}
+
+.author {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.author-profile {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: green;
+  background-size: cover;
+  background-position: center;
+  margin-right: 10px;
+}
+
+.author-name {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+.post-footer {
+  /* background-color: grey; */
+  display: flex;
+  align-items: center;
+}
+
+.comment-count {
+  margin-right: 5px;
+  margin-left: 220px;
+}
+
+.like-count {
+  margin-right: 5px;
+}
+
+.tag-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-list li {
+  display: inline-block;
+  color: #055da3;
+  background-color: #f2f2f2;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  /* border-radius: 3px; */
+}
+
+#topButton {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 16px;
+  border: none;
+  background-color: #555;
+  color: white;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 4px;
+}
