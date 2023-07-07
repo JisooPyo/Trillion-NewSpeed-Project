@@ -29,33 +29,21 @@ function signupPage() {
   window.location.href = "/api/user/signup";
 }
 
-function myProfilePage() {
-  window.location.href = "profile.html";
-}
-
 function writeNewPost() {
   window.location.href = "/api/newPost";
 }
 
-/*
-// 유저 로그인 상태에 따라 스타일 변경
+document.getElementById("my-profile").addEventListener("click", function () {
+  var jwt = localStorage.getItem("jwt");
 
-var userLoggedIn = true; // 유저가 로그인한 상태라고 가정
-
-var myProfileButton = document.getElementById("my-profile");
-var writeNewPostButton = document.getElementById("write-new-post");
-var loginButton = document.getElementsByClassName("login-button")[0];
-var signupButton = document.getElementsByClassName("signup-button")[0];
-
-if (userLoggedIn) {
-  myProfileButton.style.display = "block"; // 보이도록 스타일 변경
-  writeNewPostButton.style.display = "block";
-  loginButton.style.display = "none";
-  signupButton.style.display = "none";
-} else {
-  myProfileButton.style.display = "none"; // 숨기도록 스타일 변경
-  writeNewPostButton.style.display = "none";
-  loginButton.style.display = "block";
-  signupButton.style.display = "block";
-}
-*/
+  fetch("/api/user/profile-page", {
+    method: "GET",
+    headers: {
+      Authorization: jwt,
+    },
+  }).then(function (response) {
+    response.text().then(function (text) {
+      document.querySelector("html").innerHTML = text;
+    });
+  });
+});

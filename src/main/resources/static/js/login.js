@@ -49,7 +49,7 @@ $(document).ready(function () {
       contentType: "application/json", // 요청의 컨텐츠 타입 설정
       success: function (response) {
         var userId = response.userId;
-        alert("ID는 "+userId+"입니다.");
+        alert("ID는 " + userId + "입니다.");
         console.log("ID찾기 성공!");
       },
       error: function (xhr, status, error) {
@@ -57,7 +57,13 @@ $(document).ready(function () {
           var errorMessage = xhr.responseJSON.msg;
           var statusCode = xhr.responseJSON.statusCode;
           // 예외 처리 메시지와 상태 코드를 활용
-          alert("Error status code: " + statusCode + "\n" + "Error message: " + errorMessage)
+          alert(
+            "Error status code: " +
+              statusCode +
+              "\n" +
+              "Error message: " +
+              errorMessage
+          );
         }
       },
     });
@@ -73,7 +79,7 @@ $(document).ready(function () {
       username: username,
       email: email,
     };
-    console.log(data)
+    console.log(data);
 
     $.ajax({
       url: "/api/user/findpw",
@@ -92,7 +98,13 @@ $(document).ready(function () {
           var errorMessage = xhr.responseJSON.msg;
           var statusCode = xhr.responseJSON.statusCode;
           // 예외 처리 메시지와 상태 코드를 활용
-          alert("Error status code: " + statusCode + "\n" + "Error message: " + errorMessage)
+          alert(
+            "Error status code: " +
+              statusCode +
+              "\n" +
+              "Error message: " +
+              errorMessage
+          );
         }
       },
     });
@@ -110,22 +122,30 @@ $(document).ready(function () {
     $.ajax({
       url: "/api/user/login",
       type: "POST",
-      data: JSON.stringify(data), // 요청 데이터 설정
-      contentType: "application/json", // 요청의 컨텐츠 타입 설정
-      success: function (response) {
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      success: function (response, textStatus, xhr) {
         console.log("로그인 성공!");
-        var responseMessage = response.msg;
-        var responseCode = response.statusCode;
-        alert(responseCode + " : " + responseMessage);
-        window.location.href = "/";
+        var token = xhr.getResponseHeader("Authorization");
+        if (token) {
+          // JWT 저장
+          localStorage.setItem("jwt", token);
+          alert("로그인에 성공했습니다.");
+          window.location.href = "/";
+        }
       },
       error: function (xhr, status, error) {
         console.log("로그인 실패!");
         if (xhr.responseJSON) {
           var errorMessage = xhr.responseJSON.msg;
           var statusCode = xhr.responseJSON.statusCode;
-          // 예외 처리 메시지와 상태 코드를 활용
-          alert("Error status code: " + statusCode + "\n" + "Error message: " + errorMessage)
+          alert(
+            "Error status code: " +
+              statusCode +
+              "\n" +
+              "Error message: " +
+              errorMessage
+          );
         }
       },
     });

@@ -36,10 +36,6 @@ public class UserController {
         return "signup";
     }
 
-    @GetMapping("/user/profile-page")
-    public String myProfilePage() {return "profile";}
-
-
     @PostMapping("/user/signup")
     @ResponseBody
     public ResponseEntity<ApiResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult, HttpServletResponse response) {
