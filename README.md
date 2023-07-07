@@ -135,7 +135,8 @@
 <br/><br/>
 
 #### 수정된 ERD_3(회원가입 인증정보 Entity 추가)
-![3](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/02ca21b3-a131-4788-a2f6-cd4b424b0324)
+![4](https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131952511/531c23f8-7878-40e4-99d8-b63f954267a2)
+
 
 <br/><br/>
 <br/>
@@ -181,7 +182,7 @@
 <summary>상세보기</summary>
 
 ### User
-  <img width="669" alt="api0" src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131599243/0968c3cf-78d2-4a37-be68-3bbbb727c015">
+  <img width="669" alt="api0" src="https://github.com/JisooPyo/Trillion-NewSpeed-Project/assets/131952511/1cebf4e6-a41c-434d-ad3b-1b8d8c7dee25">
 
   <br>
 
